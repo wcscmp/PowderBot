@@ -1,0 +1,36 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:64054/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "api/testData",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "PowderBot": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/testData",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:64055/"
+    },
+    "Logging": {
+      "LogLevel": {
+          "WebhookController": "Debug",
+          "Default": "Debug",
+          "Microsoft": "Warning"
+      }
+  }
+  }
+}

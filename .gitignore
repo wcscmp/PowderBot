@@ -1,0 +1,12 @@
+.vs/
+bin/
+obj/
+packages/
+target/
+*.log
+*.userprefs
+*.suo
+*.sdf
+*.diff
+*.DotSettings
+*.user
