@@ -22,6 +22,12 @@ namespace Data.Models
         {
         }
 
+        public bool CanBeNotified(DateTimeOffset now)
+        {
+            var userTime = now.AddHours(Gmt).Hour;
+            return NotifyAfter <= userTime && userTime < NotifyBefore;
+        }
+
         public string Id { get; set; }
         public int NotifyAfter { get; set; }
         public int NotifyBefore { get; set; }

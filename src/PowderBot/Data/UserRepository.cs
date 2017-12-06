@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Data
@@ -30,6 +32,12 @@ namespace Data
             }
             user.Gmt = gmt;
             return user;
+        }
+
+        public async Task<IEnumerable<Models.UserModel>> GetUsersWhoCanBeNotified(DateTimeOffset now)
+        {
+            var all = await GetAll();
+            return all.Where(u => u.CanBeNotified(now));
         }
 
         public async Task Save(Models.UserModel user)

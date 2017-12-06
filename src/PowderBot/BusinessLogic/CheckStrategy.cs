@@ -21,8 +21,7 @@ namespace BusinessLogic
         async public Task<(string, UserModel)> Process(UserModel user)
         {
             var subscriptions = await _repo.GetByUser(user.Id);
-            var snowfall = await _snowfallChecker
-                .Check(new UserModel[] { user }, subscriptions, null);
+            var snowfall = await _snowfallChecker.Check(new UserModel[] { user }, subscriptions);
             if (!snowfall.Any())
             {
                 return ("Nothing good", user);

@@ -16,11 +16,6 @@ namespace UnitTests
     {
         private readonly UserModel _userWithoutSubscriptions = new UserModel("41");
         private readonly UserModel _user = new UserModel("42");
-        private readonly UserModel _userWithInvalidNotificationTimeRange = new UserModel("42")
-        {
-            NotifyAfter = 10,
-            NotifyBefore = 10
-        };
         private readonly SubscriptionModel _subscription
             = new SubscriptionModel("42", "http://www.snow-forecast.com/resorts/Alta/6day/mid")
             {
@@ -43,7 +38,7 @@ namespace UnitTests
                 .ReturnsAsync(new (string Uri, int Snowfall)[] { });
             var checker = new SnowfallChecker(mock.Object);
             var snowfall = await checker
-                .Check(new UserModel[] { }, new SubscriptionModel[] { _subscription }, null);
+                .Check(new UserModel[] { }, new SubscriptionModel[] { _subscription });
             Assert.IsFalse(snowfall.Any());
             mock.VerifyAll();
         }
@@ -58,42 +53,8 @@ namespace UnitTests
                 .ReturnsAsync(new (string Uri, int Snowfall)[] { });
             var checker = new SnowfallChecker(mock.Object);
             var snowfall = await checker
-                .Check(new UserModel[] { _user }, new SubscriptionModel[] { }, null);
+                .Check(new UserModel[] { _user }, new SubscriptionModel[] { });
             Assert.IsFalse(snowfall.Any());
-            mock.VerifyAll();
-        }
-
-        [TestMethod]
-        public async Task UserNotificationTimeRangeIsChecked()
-        {
-            var mock = new Mock<ISnowForecastClient>();
-            mock
-                .Setup(m => m.GetSnowfall(It.IsAny<IEnumerable<string>>()))
-                .Callback<IEnumerable<string>>(uris => Assert.IsFalse(uris.Any()))
-                .ReturnsAsync(new (string Uri, int Snowfall)[] { });
-            var checker = new SnowfallChecker(mock.Object);
-            var snowfall = await checker
-                .Check(new UserModel[] { _userWithInvalidNotificationTimeRange },
-                       new SubscriptionModel[] { _subscription },
-                       DateTimeOffset.UtcNow);
-            Assert.IsFalse(snowfall.Any());
-            mock.VerifyAll();
-        }
-
-        [TestMethod]
-        public async Task UserNotificationTimeRangeIsNotCheckedWhenNowIsNotProvided()
-        {
-            var mock = new Mock<ISnowForecastClient>();
-            mock
-                .Setup(m => m.GetSnowfall(It.IsAny<IEnumerable<string>>()))
-                .Callback<IEnumerable<string>>(uris => Assert.IsTrue(uris.Any()))
-                .ReturnsAsync(new (string Uri, int Snowfall)[] { (_subscription.Uri, 10) });
-            var checker = new SnowfallChecker(mock.Object);
-            var snowfall = await checker
-                .Check(new UserModel[] { _userWithInvalidNotificationTimeRange },
-                       new SubscriptionModel[] { _subscription },
-                       null);
-            Assert.IsTrue(snowfall.Any());
             mock.VerifyAll();
         }
 
@@ -110,7 +71,7 @@ namespace UnitTests
             var checker = new SnowfallChecker(mock.Object);
             var snowfall = await checker
                 .Check(new UserModel[] { _user, _userWithoutSubscriptions },
-                       new SubscriptionModel[] { _subscription, _invalidUserSubscription }, null);
+                       new SubscriptionModel[] { _subscription, _invalidUserSubscription });
             Assert.AreEqual(uriCount, snowfall.Count());
             mock.VerifyAll();
         }

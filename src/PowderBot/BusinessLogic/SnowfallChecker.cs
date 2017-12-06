@@ -19,13 +19,10 @@ namespace BusinessLogic
 
         async public Task<IEnumerable<(string UserId, IEnumerable<SubscriptionModel> Subscriptions)>> Check(
             IEnumerable<UserModel> users,
-            IEnumerable<SubscriptionModel> subscriptions,
-            DateTimeOffset? now)
+            IEnumerable<SubscriptionModel> subscriptions)
         {
             var userDict = users.ToDictionary(u => u.Id);
-            var subscriptionsForUsers = subscriptions
-                .Where(s => userDict.TryGetValue(s.UserId, out UserModel user)
-                    && shouldNotify(user, now));
+            var subscriptionsForUsers = subscriptions.Where(s => userDict.ContainsKey(s.UserId));
             var urls = subscriptionsForUsers
                 .GroupBy(s => s.Uri)
                 .Select(g => g.Key);
@@ -35,17 +32,6 @@ namespace BusinessLogic
                 .Where(s => snowfall.TryGetValue(s.Uri, out int forecast) && s.Snowfall <= forecast)
                 .GroupBy(s => s.UserId)
                 .Select(g => (g.Key, (IEnumerable<SubscriptionModel>)g));
-        }
-
-        private static bool shouldNotify(UserModel user, DateTimeOffset? now)
-        {
-            if (now == null)
-            {
-                return true;
-            }
-            var currentHourAtTimeZone = now.Value.Hour + user.Gmt;
-            return user.NotifyAfter <= currentHourAtTimeZone
-                && currentHourAtTimeZone < user.NotifyBefore;
         }
     }
 }
