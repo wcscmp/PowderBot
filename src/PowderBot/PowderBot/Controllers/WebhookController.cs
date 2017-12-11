@@ -59,7 +59,7 @@ namespace PowderBot.Controllers
             var user = await _userRepo.Get(entry.Messaging.First().Sender.Id);
             try
             {
-                var messageText = entry.Messaging.First().Message.QuickReply.Payload
+                var messageText = entry.Messaging.First().Message.QuickReply?.Payload
                     ?? entry.Messaging.First().Message.Text;
                 var (message, updatedUser) = await _commandFactory
                     .Create(user, messageText)
@@ -68,7 +68,7 @@ namespace PowderBot.Controllers
                 updatedUser.Gmt = await _messanger.QueryUserTimezone(updatedUser.Id);
                 updatedUser.LastCommand = messageText;
                 await _userRepo.Save(updatedUser);
-                return Ok(message);
+                return Ok();
             }
             catch (Exception)
             {
