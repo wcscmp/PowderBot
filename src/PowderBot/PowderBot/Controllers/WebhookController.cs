@@ -49,7 +49,7 @@ namespace PowderBot.Controllers
         {
             await _requestRepo.InsertOrReplace(new RequestModel("42")
                                                {
-                                                   Request = JsonConvert.SerializeObject(body)
+                                                   Message = JsonConvert.SerializeObject(body)
                                                });
             if (body.Object != "page")
             {
