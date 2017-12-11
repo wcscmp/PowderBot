@@ -5,6 +5,7 @@ using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using PowderBot.ApiTypes.Facebook;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,7 +45,7 @@ namespace PowderBot.Controllers
             return Ok(Request.Query["hub.challenge"].First());
         }
 
-        [HttpPost]
+        /*[HttpPost]
         async public Task<IActionResult> Post([FromBody]Event body)
         {
             await _requestRepo.InsertOrReplace(new RequestModel("42")
@@ -75,6 +76,19 @@ namespace PowderBot.Controllers
                     .SendMessage(_messanger);
                 return Ok();
             }
+        }*/
+
+        [HttpPost]
+        async public Task<IActionResult> Post()
+        {
+            using (var sr = new StreamReader(Request.Body))
+            {
+                await _requestRepo.InsertOrReplace(new RequestModel("42")
+                {
+                    Message = JsonConvert.SerializeObject(sr.ReadToEnd())
+                });
+            }
+            return Ok();
         }
     }
 }
