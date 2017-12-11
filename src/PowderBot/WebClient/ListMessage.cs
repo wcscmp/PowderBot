@@ -12,15 +12,13 @@ namespace WebClient
     {
         private readonly string _header;
         private readonly string _baseText;
-        private readonly IEnumerable<string> _elements;
-        private readonly IEnumerable<string> _texts;
+        private readonly IEnumerable<(string, string)> _elements;
 
         public ListMessage(string header, string baseText, IEnumerable<string> elements)
         {
             _header = header;
             _baseText = baseText;
-            _elements = elements.ToArray();
-            _texts = elements;
+            _elements = elements.Select(e => (e, e));
         }
 
         public ListMessage(string header,
@@ -30,8 +28,7 @@ namespace WebClient
         {
             _header = header;
             _baseText = baseText;
-            _elements = elements.ToArray();
-            _texts = texts;
+            _elements = elements.Zip(texts, (e, t) => (e, t));
         }
 
         public async Task SendMessage(string userId, IMessanger client)
@@ -40,10 +37,10 @@ namespace WebClient
                 new QuickReply
                 {
                     Text = _header,
-                    QuickReplies = _elements.Zip(_texts, (e, t) => new QuickReplyBody
+                    QuickReplies = _elements.Select(e => new QuickReplyBody
                     {
-                        Title = t,
-                        Payload = _baseText + e
+                        Title = e.Item2,
+                        Payload = _baseText + e.Item1
                     }).ToArray()
                 });
         }
