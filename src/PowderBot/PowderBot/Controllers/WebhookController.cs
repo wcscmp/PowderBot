@@ -5,6 +5,7 @@ using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using PowderBot.ApiTypes.Facebook;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,16 +18,19 @@ namespace PowderBot.Controllers
     {
         public WebhookController(FacebookClient facebookClient,
                                  CommandFactory commandFactory,
-                                 UserRepository userRepo)
+                                 UserRepository userRepo,
+                                 IGenericRepository<RequestModel> requestRepo)
         {
             _facebookClient = facebookClient;
             _commandFactory = commandFactory;
             _userRepo = userRepo;
+            _requestRepo = requestRepo;
         }
 
         private readonly FacebookClient _facebookClient;
         private readonly CommandFactory _commandFactory;
         private readonly UserRepository _userRepo;
+        private readonly IGenericRepository<RequestModel> _requestRepo;
 
         [HttpGet]
         public IActionResult Get()
@@ -43,6 +47,13 @@ namespace PowderBot.Controllers
         [HttpPost]
         async public Task<IActionResult> Post([FromBody]Event<TextMessage> body)
         {
+            using (var sr = new StreamReader(Request.Body))
+            {
+                await _requestRepo.InsertOrReplace(new RequestModel("42")
+                                                   {
+                                                       Request = sr.ReadToEnd()
+                                                   });
+            }
             if (body.Object != "page")
             {
                 return NotFound();
