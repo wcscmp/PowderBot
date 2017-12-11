@@ -66,7 +66,6 @@ namespace PowderBot.Controllers
                     .Process();
                 await message.SendMessage(_messanger);
                 updatedUser.Gmt = await _messanger.QueryUserTimezone(updatedUser.Id);
-                updatedUser.LastCommand = messageText;
                 await _userRepo.Save(updatedUser);
                 return Ok();
             }

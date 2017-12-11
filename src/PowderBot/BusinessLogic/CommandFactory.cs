@@ -21,6 +21,8 @@ namespace BusinessLogic
 
         public ICommandStrategy Create(UserModel user, string message)
         {
+            var lastCommand = user.LastCommand;
+            user.LastCommand = null;
             var words = message
                 .Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
                 .Select(s => s.ToLowerInvariant());
@@ -38,13 +40,9 @@ namespace BusinessLogic
             case "list":
                 return new ListStrategy(user, _subscriptionRepo);
             }
-            if (user.LastCommand != null)
-            {
-                var newCommand = $"{user.LastCommand} {message}";
-                user.LastCommand = null;
-                return Create(user, newCommand);
-            }
-            return new UsageStrategy(user);
+            return lastCommand != null
+                ? Create(user, $"{lastCommand} {message}")
+                : new UsageStrategy(user);
         }
     }
 }

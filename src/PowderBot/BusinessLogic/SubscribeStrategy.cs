@@ -42,11 +42,13 @@ namespace BusinessLogic
         {
             if (_words.Length == 1)
             {
+                _user.LastCommand = string.Join(" ", _words);
                 return (0, new TextMessage(_user.Id,
                                            "Enter a http://www.snow-forecast.com link to follow"));
             }
             if (_words.Length == 2)
             {
+                _user.LastCommand = string.Join(" ", _words);
                 return (0, new TextMessage(_user.Id, "Enter a snowfall threshhold"));
             }
             var m = _snowfallRe.Match(_words.Last());

@@ -26,6 +26,7 @@ namespace BusinessLogic
         {
             if (_words.Length != 2)
             {
+                _user.LastCommand = string.Join(" ", _words);
                 return (new WebClient.TextMessage(_user.Id, "Enter a snow-forecast url"), _user);
             }
             if (_words[1] != "all")
