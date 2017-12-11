@@ -27,6 +27,6 @@ namespace BusinessLogic
             return (new TextMessage(_user.Id, subscriptions), _user);
         }
 
-        public const string Usage = "list - show your subscriptions";
+        public const string Usage = "ls/list - show your subscriptions";
     }
 }
