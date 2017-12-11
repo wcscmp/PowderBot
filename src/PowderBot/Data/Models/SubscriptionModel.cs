@@ -10,19 +10,22 @@ namespace Data.Models
 
         public SubscriptionModel(string userId, string uri)
         {
-            PartitionKey = DefaultPartition;
-            RowKey = userId +
-                uri.Split(new Char[]{'/'})
-                   .SkipWhile(str => str != "resorts")
-                   .Skip(1)
-                   .First();
-
             Uri = uri;
             UserId = userId;
+            PartitionKey = DefaultPartition;
+            RowKey = userId + GetResortName();
         }
 
         public SubscriptionModel()
         {
+        }
+
+        public string GetResortName()
+        {
+            return Uri.Split(new Char[]{'/'})
+                   .SkipWhile(str => str != "resorts")
+                   .Skip(1)
+                   .First();
         }
 
         public string UserId { get; set; }

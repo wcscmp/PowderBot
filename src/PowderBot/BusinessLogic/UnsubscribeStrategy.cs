@@ -26,13 +26,14 @@ namespace BusinessLogic
         {
             if (_words.Length == 1)
             {
-                var uris = (await _repo.GetByUser(_user.Id))
-                    .Select(s => s.Uri)
-                    .ToArray();
-                if (uris.Any() || uris.Length <= 10)
+                var subscriptions = await _repo.GetByUser(_user.Id);
+                if (subscriptions.Any() && subscriptions.Count() <= 10)
                 {
-                    var options = (new string[] { "all" }).Concat(uris);
-                    return (new ListMessage(_user.Id, $"{string.Join(" ", _words)} ", options),
+                    var uris = (new string[] { "all" }).Concat(subscriptions.Select(s => s.Uri));
+                    var texts = (new string[] { "all" })
+                        .Concat(subscriptions.Select(s => s.GetResortName()));
+                    return (new ListMessage("From what?", $"{string.Join(" ", _words)} ",
+                                            uris, texts),
                             _user);
                 }
             }
