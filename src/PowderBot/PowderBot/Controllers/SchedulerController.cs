@@ -13,18 +13,18 @@ namespace PowderBot.Controllers
     [Route("scheduler")]
     public class SchedulerController : Controller
     {
-        public SchedulerController(FacebookClient facebookClient,
+        public SchedulerController(IMessanger messanger,
                                    SnowfallChecker snowfallChecker,
                                    UserRepository userRepo,
                                    SubscriptionRepository subscriptionRepo)
         {
-            _facebookClient = facebookClient;
+            _messanger = messanger;
             _snowfallChecker = snowfallChecker;
             _userRepo = userRepo;
             _subscriptionRepo = subscriptionRepo;
         }
 
-        private readonly FacebookClient _facebookClient;
+        private readonly IMessanger _messanger;
         private readonly SnowfallChecker _snowfallChecker;
         private readonly UserRepository _userRepo;
         private readonly SubscriptionRepository _subscriptionRepo;
@@ -46,7 +46,7 @@ namespace PowderBot.Controllers
         private async Task notify(string userId, IEnumerable<SubscriptionModel> subs)
         {
             var uris = string.Join("\n", subs.Select(s => s.Uri));
-            await _facebookClient.SendMessage(userId, "Check this out:\n" + uris);
+            await new TextMessage(userId, "Check this out:\n" + uris).SendMessage(_messanger);
         }
     }
 }

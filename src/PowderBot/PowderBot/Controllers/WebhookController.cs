@@ -16,18 +16,18 @@ namespace PowderBot.Controllers
     [Route("webhook")]
     public class WebhookController : Controller
     {
-        public WebhookController(FacebookClient facebookClient,
+        public WebhookController(IMessanger messanger,
                                  CommandFactory commandFactory,
                                  UserRepository userRepo,
                                  IGenericRepository<RequestModel> requestRepo)
         {
-            _facebookClient = facebookClient;
+            _messanger = messanger;
             _commandFactory = commandFactory;
             _userRepo = userRepo;
             _requestRepo = requestRepo;
         }
 
-        private readonly FacebookClient _facebookClient;
+        private readonly IMessanger _messanger;
         private readonly CommandFactory _commandFactory;
         private readonly UserRepository _userRepo;
         private readonly IGenericRepository<RequestModel> _requestRepo;
@@ -64,15 +64,16 @@ namespace PowderBot.Controllers
                 var (message, updatedUser) = await _commandFactory
                     .Create(user, messageText)
                     .Process();
-                await _facebookClient.SendMessage(updatedUser.Id, message);
-                updatedUser.Gmt = await _facebookClient.QueryUserTimezone(updatedUser.Id);
+                await message.SendMessage(_messanger);
+                updatedUser.Gmt = await _messanger.QueryUserTimezone(updatedUser.Id);
                 updatedUser.LastCommand = messageText;
                 await _userRepo.Save(updatedUser);
                 return Ok(message);
             }
             catch (Exception)
             {
-                await _facebookClient.SendMessage(user.Id, "Sorry, something went wrong");
+                await new WebClient.TextMessage(user.Id, "Sorry, something went wrong")
+                    .SendMessage(_messanger);
                 return Ok();
             }
         }
