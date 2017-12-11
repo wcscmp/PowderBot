@@ -16,7 +16,6 @@ namespace UnitTests
             var words = new string[] { "notify", "after", "9" };
             var (_, user) = await new NotifyStrategy(words)
                 .Process(new UserModel(userId));
-            Assert.IsTrue(user.NeedToSave);
             Assert.AreEqual(words[2], user.NotifyAfter.ToString());
         }
 
@@ -27,7 +26,6 @@ namespace UnitTests
             var words = new string[] { "notify", "before", "9" };
             var (_, user) = await new NotifyStrategy(words)
                 .Process(new UserModel(userId));
-            Assert.IsTrue(user.NeedToSave);
             Assert.AreEqual(words[2], user.NotifyBefore.ToString());
         }
 
@@ -38,7 +36,6 @@ namespace UnitTests
             var words = new string[] { "notify", "after", "29" };
             var (_, user) = await new NotifyStrategy(words)
                 .Process(new UserModel(userId));
-            Assert.IsFalse(user.NeedToSave);
             Assert.AreNotEqual(words[2], user.NotifyAfter.ToString());
         }
 
@@ -49,7 +46,6 @@ namespace UnitTests
             var words = new string[] { "notify", "after", "-9" };
             var (_, user) = await new NotifyStrategy(words)
                 .Process(new UserModel(userId));
-            Assert.IsFalse(user.NeedToSave);
             Assert.AreNotEqual(words[2], user.NotifyAfter.ToString());
         }
     }

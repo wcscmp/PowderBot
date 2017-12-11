@@ -19,18 +19,16 @@ namespace Data
             return _repo.GetAll();
         }
 
-        public async Task<Models.UserModel> Get(string id, int gmt)
+        public async Task<Models.UserModel> Get(string id)
         {
             var user = await _repo.Get(id);
             if (user == null)
             {
                 user = new Models.UserModel(id)
                 {
-                    NotifyAfter = 7,
-                    NeedToSave = true
+                    NotifyAfter = 7
                 };
             }
-            user.Gmt = gmt;
             return user;
         }
 

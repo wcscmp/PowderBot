@@ -13,7 +13,6 @@ namespace Data.Models
             RowKey = id;
 
             Id = id;
-            NeedToSave = false;
             NotifyAfter = 0;
             NotifyBefore = 24;
         }
@@ -32,7 +31,5 @@ namespace Data.Models
         public int NotifyAfter { get; set; }
         public int NotifyBefore { get; set; }
         public int Gmt { get; set; }
-        [IgnoreProperty]
-        public bool NeedToSave { get; set; }
     }
 }

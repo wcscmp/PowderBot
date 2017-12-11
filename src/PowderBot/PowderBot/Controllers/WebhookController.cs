@@ -56,19 +56,15 @@ namespace PowderBot.Controllers
                 return NotFound();
             }
             var entry = body.Entry.First();
-            var user = await _userRepo.Get(
-                entry.Messaging.First().Sender.Id,
-                GmtHelper.GetGmt(entry.Time, entry.Messaging.First().Timestamp));
+            var user = await _userRepo.Get(entry.Messaging.First().Sender.Id);
             try
             {
                 var (message, updatedUser) = await _commandFactory
                     .Create(entry.Messaging.First().Message.Text)
                     .Process(user);
-                if (updatedUser.NeedToSave)
-                {
-                    await _userRepo.Save(updatedUser);
-                }
                 await _facebookClient.SendMessage(updatedUser.Id, message);
+                updatedUser.Gmt = await _facebookClient.QueryUserTimezone(updatedUser.Id);
+                await _userRepo.Save(updatedUser);
                 return Ok(message);
             }
             catch (Exception)

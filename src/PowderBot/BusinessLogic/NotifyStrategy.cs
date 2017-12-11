@@ -30,7 +30,6 @@ namespace BusinessLogic
             {
                 user.NotifyBefore = time == 0 ? 24 : time;
             }
-            user.NeedToSave = true;
             var message = $"Notification range is [{user.NotifyAfter}, {user.NotifyBefore})";
             if (user.NotifyAfter >= user.NotifyBefore)
             {
