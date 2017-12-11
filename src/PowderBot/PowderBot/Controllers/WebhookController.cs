@@ -45,7 +45,7 @@ namespace PowderBot.Controllers
             return Ok(Request.Query["hub.challenge"].First());
         }
 
-        /*[HttpPost]
+        [HttpPost]
         async public Task<IActionResult> Post([FromBody]Event body)
         {
             await _requestRepo.InsertOrReplace(new RequestModel("42")
@@ -60,35 +60,22 @@ namespace PowderBot.Controllers
             var user = await _userRepo.Get(entry.Messaging.First().Sender.Id);
             try
             {
-                var messageText = entry.Messaging.First().Postback?.Payload
-                    ?? entry.Messaging.First().Message.Text;
-                var (message, updatedUser) = await _commandFactory
+                var message = entry.Messaging.First().Message;
+                var messageText = message.QuickReply?.Payload ?? message.Text;
+                var (response, updatedUser) = await _commandFactory
                     .Create(user, messageText)
                     .Process();
-                await message.SendMessage(_messanger);
+                await response.SendMessage(updatedUser.Id, _messanger);
                 updatedUser.Gmt = await _messanger.QueryUserTimezone(updatedUser.Id);
                 await _userRepo.Save(updatedUser);
                 return Ok();
             }
             catch (Exception)
             {
-                await new WebClient.TextMessage(user.Id, "Sorry, something went wrong")
-                    .SendMessage(_messanger);
+                await new WebClient.TextMessage("Sorry, something went wrong")
+                    .SendMessage(user.Id, _messanger);
                 return Ok();
             }
-        }*/
-
-        [HttpPost]
-        async public Task<IActionResult> Post()
-        {
-            using (var sr = new StreamReader(Request.Body))
-            {
-                await _requestRepo.InsertOrReplace(new RequestModel("42")
-                {
-                    Message = JsonConvert.SerializeObject(sr.ReadToEnd())
-                });
-            }
-            return Ok();
         }
     }
 }

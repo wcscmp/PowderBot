@@ -4,6 +4,6 @@ namespace WebClient
 {
     public interface IMessage
     {
-        Task SendMessage(IMessanger client);
+        Task SendMessage(string userId, IMessanger client);
     }
 }

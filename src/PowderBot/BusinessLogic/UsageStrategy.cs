@@ -21,7 +21,7 @@ namespace BusinessLogic
                                  SubscribeStrategy.Usage + "\n" +
                                  ListStrategy.Usage + "\n" +
                                  UnsubscribeStrategy.Usage;
-            IMessage message = new TextMessage(_user.Id, usage);
+            IMessage message = new TextMessage(usage);
             return Task.FromResult((message, _user));
         }
     }

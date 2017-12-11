@@ -8,18 +8,16 @@ namespace WebClient
 {
     public class TextMessage : IMessage
     {
-        private readonly string _userId;
         private readonly string _text;
 
-        public TextMessage(string userId, string text)
+        public TextMessage(string text)
         {
-            _userId = userId;
             _text = text;
         }
 
-        public async Task SendMessage(IMessanger client)
+        public async Task SendMessage(string userId, IMessanger client)
         {
-            await client.SendMessage(_userId,
+            await client.SendMessage(userId,
                 new TextData
                 {
                     Text = _text

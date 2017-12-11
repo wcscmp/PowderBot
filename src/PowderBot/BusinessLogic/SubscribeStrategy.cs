@@ -35,7 +35,7 @@ namespace BusinessLogic
                              {
                                  Snowfall = snowfall
                              });
-            return (new TextMessage(_user.Id, "Subscribtion added"), _user);
+            return (new TextMessage("Subscribtion added"), _user);
         }
 
         private (int, IMessage) parse()
@@ -43,18 +43,17 @@ namespace BusinessLogic
             if (_words.Length == 1)
             {
                 _user.LastCommand = string.Join(" ", _words);
-                return (0, new TextMessage(_user.Id, "Enter a http://www.snow-forecast.com link"));
+                return (0, new TextMessage("Enter a http://www.snow-forecast.com link"));
             }
             if (_words.Length == 2)
             {
                 _user.LastCommand = string.Join(" ", _words);
-                return (0, new TextMessage(_user.Id, "Enter a snowfall threshhold"));
+                return (0, new TextMessage("Enter a snowfall threshhold"));
             }
             var m = _snowfallRe.Match(_words.Last());
             if (!m.Success)
             {
-                return (0, new TextMessage(_user.Id,
-                                           "Snowfall should be a number followed by inch or cm"));
+                return (0, new TextMessage("Snowfall should be a number followed by inch or cm"));
             }
             var snowfall = int.Parse(m.Groups[1].Captures[0].Value);
             if (m.Groups[2].Captures[0].Value == "inch")
@@ -66,7 +65,7 @@ namespace BusinessLogic
                 return (snowfall, null);
             }
             var baseText = $"{string.Join(" ", _words.Take(2))} {m.Groups[1].Captures[0].Value}";
-            return (0, new ListMessage(_user.Id, "Choose measurement units", baseText,
+            return (0, new ListMessage("Choose measurement units", baseText,
                                        new string[] { "cm", "inch" }));
         }
 

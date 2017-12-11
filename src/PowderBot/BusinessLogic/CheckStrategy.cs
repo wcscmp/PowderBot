@@ -28,11 +28,10 @@ namespace BusinessLogic
             var snowfall = await _snowfallChecker.Check(new UserModel[] { _user }, subscriptions);
             if (!snowfall.Any())
             {
-                return (new TextMessage(_user.Id, "Nothing good"), _user);
+                return (new TextMessage("Nothing good"), _user);
             }
             var uris = snowfall.First().Subscriptions.Select(s => s.Uri);
-            return (new TextMessage(_user.Id, "Check this out:\n" + string.Join("\n", uris)),
-                    _user);
+            return (new TextMessage("Check this out:\n" + string.Join("\n", uris)), _user);
         }
 
         public const string Usage = "check - check your subscriptions";

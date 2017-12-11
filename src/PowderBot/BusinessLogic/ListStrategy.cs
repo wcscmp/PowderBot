@@ -24,7 +24,7 @@ namespace BusinessLogic
             var subscriptions = subscriptionsByUser.Any()
                 ? string.Join("\n", subscriptionsByUser.Select(s => s.Uri))
                 : "You have no subsctiptions";
-            return (new TextMessage(_user.Id, subscriptions), _user);
+            return (new TextMessage(subscriptions), _user);
         }
 
         public const string Usage = "ls/list - show your subscriptions";

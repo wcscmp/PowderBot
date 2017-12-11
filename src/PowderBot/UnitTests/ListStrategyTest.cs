@@ -25,7 +25,7 @@ namespace UnitTests
             var (message, _) = await new ListStrategy(new UserModel(userId), subscriptionRepo)
                 .Process();
             var messanger = new TestMessanger();
-            await message.SendMessage(messanger);
+            await message.SendMessage(userId, messanger);
             Assert.IsTrue(uris.All(uri => messanger.Text.Contains(uri)));
         }
     }

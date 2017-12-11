@@ -24,17 +24,29 @@ namespace BusinessLogic
 
         async public Task<(IMessage, UserModel)> Process()
         {
+            if (_words.Length == 1)
+            {
+                var uris = (await _repo.GetByUser(_user.Id))
+                    .Select(s => s.Uri)
+                    .ToArray();
+                if (uris.Any() || uris.Length <= 10)
+                {
+                    var options = (new string[] { "all" }).Concat(uris);
+                    return (new ListMessage(_user.Id, $"{string.Join(" ", _words)} ", options),
+                            _user);
+                }
+            }
             if (_words.Length != 2)
             {
                 _user.LastCommand = string.Join(" ", _words);
-                return (new WebClient.TextMessage(_user.Id, "Enter a snow-forecast url"), _user);
+                return (new TextMessage("Enter existing subscription link or all"), _user);
             }
             if (_words[1] != "all")
             {
                 bool deleted = await _repo.Delete(_user.Id, _words[1]);
                 if (!deleted)
                 {
-                    return (new WebClient.TextMessage(_user.Id, "Subscription not found"), _user);
+                    return (new TextMessage("Subscription not found"), _user);
                 }
             }
             else
@@ -44,7 +56,7 @@ namespace BusinessLogic
                     .ToArray()
                     .Select(s => _repo.Delete(s.UserId, s.Uri)));
             }
-            return (new WebClient.TextMessage(_user.Id, "Done"), _user);
+            return (new TextMessage("Done"), _user);
         }
 
         public const string Usage = "unsb/unsubscribe - stop following resort";
