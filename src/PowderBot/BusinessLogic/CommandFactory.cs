@@ -28,8 +28,6 @@ namespace BusinessLogic
             {
             case "check":
                 return new CheckStrategy(_subscriptionRepo, _snowfallChecker);
-            case "notify":
-                return new NotifyStrategy(words.ToArray());
             case "subscribe":
                 return new SubscribeStrategy(words.ToArray(), _subscriptionRepo);
             case "unsubscribe":

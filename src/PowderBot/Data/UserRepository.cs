@@ -24,10 +24,7 @@ namespace Data
             var user = await _repo.Get(id);
             if (user == null)
             {
-                user = new Models.UserModel(id)
-                {
-                    NotifyAfter = 7
-                };
+                return new Models.UserModel(id);
             }
             return user;
         }

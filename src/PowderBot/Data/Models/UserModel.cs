@@ -13,8 +13,6 @@ namespace Data.Models
             RowKey = id;
 
             Id = id;
-            NotifyAfter = 0;
-            NotifyBefore = 24;
         }
 
         public UserModel()
@@ -23,8 +21,10 @@ namespace Data.Models
 
         public bool CanBeNotified(DateTimeOffset now)
         {
+            const int notifyAfter = 9;
+            const int notifyBefore = 22;
             var userTime = now.AddHours(Gmt).Hour;
-            return NotifyAfter <= userTime && userTime < NotifyBefore;
+            return notifyAfter <= userTime && userTime < notifyBefore;
         }
 
         public string Id { get; set; }

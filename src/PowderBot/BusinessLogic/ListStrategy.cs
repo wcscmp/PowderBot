@@ -23,8 +23,7 @@ namespace BusinessLogic
             {
                 subscriptions = "You have no subsctiptions";
             }
-            var timeRange = $"Notification range is [{user.NotifyAfter}, {user.NotifyBefore})\n";
-            return (timeRange + subscriptions, user);
+            return (subscriptions, user);
         }
 
         public const string Usage = "list\n" +

@@ -11,7 +11,6 @@ namespace BusinessLogic
             const string usage = "Usage:\n" +
                                  CheckStrategy.Usage + "\n" +
                                  SubscribeStrategy.Usage + "\n" +
-                                 NotifyStrategy.Usage + "\n" +
                                  ListStrategy.Usage + "\n" +
                                  UnsubscribeStrategy.Usage;
             return Task.FromResult((usage, user));

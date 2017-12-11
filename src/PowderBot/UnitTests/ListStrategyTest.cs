@@ -26,23 +26,5 @@ namespace UnitTests
                 .Process(new UserModel(userId));
             Assert.IsTrue(uris.All(uri => message.Contains(uri)));
         }
-
-        [TestMethod]
-        public async Task NotificationTimeRangeIsDisplayed()
-        {
-            var user = new UserModel("42")
-            {
-                NotifyAfter = 10,
-                NotifyBefore = 20
-            };
-            var subscriptionRepoMock = new Mock<IGenericRepository<SubscriptionModel>>();
-            subscriptionRepoMock
-                .Setup(mock => mock.GetAll())
-                .ReturnsAsync(new SubscriptionModel[0] { });
-            var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
-            var (message, _) = await new ListStrategy(subscriptionRepo).Process(user);
-            Assert.IsTrue(message.Contains(user.NotifyAfter.ToString()));
-            Assert.IsTrue(message.Contains(user.NotifyBefore.ToString()));
-        }
     }
 }
