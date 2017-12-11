@@ -20,7 +20,7 @@ namespace WebClient
         public FacebookClient(IOptions<FacebookConfiguration> config, HttpClient client)
         {
             _client = client;
-            _facebookUrl = "https://graph.facebook.com/v2.6/me/messages?";
+            _facebookUrl = "https://graph.facebook.com/v2.6";
             _accessToken = config.Value.AccessToken;
         }
 
