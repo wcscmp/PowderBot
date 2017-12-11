@@ -14,13 +14,12 @@ namespace WebClient
     public class FacebookClient
     {
         private readonly HttpClient _client;
-        private readonly string _facebookUrl;
+        private const string _facebookUrl = "https://graph.facebook.com/v2.6";
         private readonly string _accessToken;
 
         public FacebookClient(IOptions<FacebookConfiguration> config, HttpClient client)
         {
             _client = client;
-            _facebookUrl = "https://graph.facebook.com/v2.6";
             _accessToken = config.Value.AccessToken;
         }
 
@@ -68,7 +67,8 @@ namespace WebClient
                     }
                 });
             var pushContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-            await _client.PostAsync(createRequestUri("me/messages"), pushContent);
+            var uri = createRequestUri("me/messages");
+            await _client.PostAsync(uri, pushContent);
         }
 
         private string createRequestUri(string request,
@@ -76,7 +76,7 @@ namespace WebClient
         {
             var allParams = reqParams
                 .Concat(new (string, string)[] { ("access_token", _accessToken) })
-                .Select(p => $"{p.Item1}={p.Item1}");
+                .Select(p => $"{p.Item1}={p.Item2}");
             return $"{_facebookUrl}/{request}?{string.Join("&", allParams)}";
         }
     }
