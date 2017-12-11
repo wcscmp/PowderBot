@@ -5,11 +5,11 @@ using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using PowderBot.ApiTypes.Facebook;
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebClient;
+using Newtonsoft.Json;
 
 namespace PowderBot.Controllers
 {
@@ -47,13 +47,10 @@ namespace PowderBot.Controllers
         [HttpPost]
         async public Task<IActionResult> Post([FromBody]Event<TextMessage> body)
         {
-            using (var sr = new StreamReader(Request.Body))
-            {
-                await _requestRepo.InsertOrReplace(new RequestModel("42")
-                                                   {
-                                                       Request = sr.ReadToEnd()
-                                                   });
-            }
+            await _requestRepo.InsertOrReplace(new RequestModel("42")
+                                               {
+                                                   Request = JsonConvert.SerializeObject(body)
+                                               });
             if (body.Object != "page")
             {
                 return NotFound();
