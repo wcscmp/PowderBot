@@ -43,8 +43,7 @@ namespace BusinessLogic
             if (_words.Length == 1)
             {
                 _user.LastCommand = string.Join(" ", _words);
-                return (0, new TextMessage(_user.Id,
-                                           "Enter a http://www.snow-forecast.com link to follow"));
+                return (0, new TextMessage(_user.Id, "Enter a http://www.snow-forecast.com link"));
             }
             if (_words.Length == 2)
             {
@@ -66,10 +65,8 @@ namespace BusinessLogic
             {
                 return (snowfall, null);
             }
-            return (0, new ListMessage(_user.Id,
-                                       "Choose measurement units",
-                                       string.Join(" ", _words.Take(2)) +
-                                           m.Groups[1].Captures[0].Value,
+            var baseText = $"{string.Join(" ", _words.Take(2))} {m.Groups[1].Captures[0].Value}";
+            return (0, new ListMessage(_user.Id, "Choose measurement units", baseText,
                                        new string[] { "cm", "inch" }));
         }
 

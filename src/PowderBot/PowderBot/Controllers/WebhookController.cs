@@ -45,13 +45,13 @@ namespace PowderBot.Controllers
         }
 
         [HttpPost]
-        async public Task<IActionResult> Post([FromBody]Event<ApiTypes.Facebook.TextMessage> body)
+        async public Task<IActionResult> Post([FromBody]Event body)
         {
             await _requestRepo.InsertOrReplace(new RequestModel("42")
                                                {
                                                    Message = JsonConvert.SerializeObject(body)
                                                });
-            if (body.Object != "page")
+            if (body.Object != null && body.Object != "page")
             {
                 return NotFound();
             }
@@ -59,7 +59,7 @@ namespace PowderBot.Controllers
             var user = await _userRepo.Get(entry.Messaging.First().Sender.Id);
             try
             {
-                var messageText = entry.Messaging.First().Message.QuickReply?.Payload
+                var messageText = entry.Messaging.First().Postback?.Payload
                     ?? entry.Messaging.First().Message.Text;
                 var (message, updatedUser) = await _commandFactory
                     .Create(user, messageText)

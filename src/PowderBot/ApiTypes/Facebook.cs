@@ -20,13 +20,14 @@ namespace PowderBot.ApiTypes.Facebook
     }
 
     public class TextData
-    {
+{
         public string Text { get; set; }
     }
 
-    public class ListButton : TextData
+    public class ListButton
     {
         public string Type => "postback";
+        public string Title { get; set; }
         public string Payload { get; set; }
     }
 
@@ -47,7 +48,7 @@ namespace PowderBot.ApiTypes.Facebook
         public ListAttachment Attachment { get; set; }
     }
 
-    public class TextMessageBody : TextData
+    public class MessageBody : TextData
     {
         public string Mid { get; set; }
 
@@ -56,23 +57,31 @@ namespace PowderBot.ApiTypes.Facebook
         public List<object> Attachments { get; set; }
     }
 
-    public class TextMessage : MessageBase
+    public class MessagePostback
     {
-        public long Timestamp { get; set; }
-        public TextMessageBody Message { get; set; }
+        public string Title { get; set; }
+        public string Payload { get; set; }
+        public object Referal { get; set; }
     }
 
-    public class Entry<T>
+    public class MessageData : MessageBase
+    {
+        public long Timestamp { get; set; }
+        public MessageBody Message { get; set; }
+        public MessagePostback Postback { get; set; }
+    }
+
+    public class Entry
     {
         public string Id { get; set; }
         public long Time { get; set; }
-        public List<T> Messaging { get; set; }
+        public List<MessageData> Messaging { get; set; }
     }
 
-    public class Event<T>
+    public class Event
     {
         public string Object { get; set; }
-        public List<Entry<T>> Entry { get; set; }
+        public List<Entry> Entry { get; set; }
     }
 
     public class MessageResponse<T>

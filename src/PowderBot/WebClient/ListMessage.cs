@@ -34,7 +34,7 @@ namespace WebClient
                             Text = _header,
                             Buttons = _elements.Select(e => new ListButton
                             {
-                                Text = e,
+                                Title = e,
                                 Payload = _baseText + e
                             }).ToArray()
                         }
