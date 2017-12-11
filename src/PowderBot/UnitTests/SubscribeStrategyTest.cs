@@ -21,9 +21,10 @@ namespace UnitTests
                 .Setup(mock => mock.InsertOrReplace(It.IsAny<SubscriptionModel>()))
                 .Returns(Task.CompletedTask);
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
-            await new SubscribeStrategy(new string[] { "subscribe", subscription.Uri, "10cm" },
+            await new SubscribeStrategy(new UserModel(userId),
+                                        new string[] { "subscribe", subscription.Uri, "10cm" },
                                         subscriptionRepo)
-                .Process(new UserModel(userId));
+                .Process();
             subscriptionRepoMock.VerifyAll();
         }
 
@@ -38,9 +39,10 @@ namespace UnitTests
                 .Setup(mock => mock.InsertOrReplace(It.IsAny<SubscriptionModel>()))
                 .Returns(Task.CompletedTask);
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
-            await new SubscribeStrategy(new string[] { "subscribe", subscription.Uri, "10inch" },
+            await new SubscribeStrategy(new UserModel(userId),
+                                        new string[] { "subscribe", subscription.Uri, "10inch" },
                                         subscriptionRepo)
-                .Process(new UserModel(userId));
+                .Process();
             subscriptionRepoMock.VerifyAll();
         }
 
@@ -51,9 +53,10 @@ namespace UnitTests
             var subscription = new SubscriptionModel(userId,
                                                      "http://www.snow-forecast.com/resorts/Alta");
             var subscriptionRepo = new SubscriptionRepository(null);
-            await new SubscribeStrategy(new string[] { "subscribe", subscription.Uri, "10asd" },
+            await new SubscribeStrategy(new UserModel(userId),
+                                        new string[] { "subscribe", subscription.Uri, "10asd" },
                                         subscriptionRepo)
-                .Process(new UserModel(userId));
+                .Process();
         }
     }
 }

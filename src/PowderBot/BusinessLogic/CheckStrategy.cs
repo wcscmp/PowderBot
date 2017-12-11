@@ -3,34 +3,38 @@ using Data.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using WebClient;
 
 namespace BusinessLogic
 {
     public class CheckStrategy : ICommandStrategy
     {
+        private readonly UserModel _user;
         private readonly SubscriptionRepository _repo;
         private readonly SnowfallChecker _snowfallChecker;
 
-        public CheckStrategy(SubscriptionRepository repo,
+        public CheckStrategy(UserModel user,
+                             SubscriptionRepository repo,
                              SnowfallChecker snowfallChecker)
         {
+            _user = user;
             _repo = repo;
             _snowfallChecker = snowfallChecker;
         }
 
-        async public Task<(string, UserModel)> Process(UserModel user)
+        async public Task<(IMessage, UserModel)> Process()
         {
-            var subscriptions = await _repo.GetByUser(user.Id);
-            var snowfall = await _snowfallChecker.Check(new UserModel[] { user }, subscriptions);
+            var subscriptions = await _repo.GetByUser(_user.Id);
+            var snowfall = await _snowfallChecker.Check(new UserModel[] { _user }, subscriptions);
             if (!snowfall.Any())
             {
-                return ("Nothing good", user);
+                return (new TextMessage(_user.Id, "Nothing good"), _user);
             }
             var uris = snowfall.First().Subscriptions.Select(s => s.Uri);
-            return ("Check this out:\n" + string.Join("\n", uris), user);
+            return (new TextMessage(_user.Id, "Check this out:\n" + string.Join("\n", uris)),
+                    _user);
         }
 
-        public const string Usage = "check\n" +
-                                    "    check snowfall for all subscriptions";
+        public const string Usage = "check - check your subscriptions";
     }
 }

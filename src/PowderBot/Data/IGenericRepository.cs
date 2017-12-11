@@ -9,7 +9,7 @@ namespace Data
         Task<IEnumerable<T>> GetAll();
         Task<T> Get(string id);
         Task InsertOrReplace(T entity);
-        Task Delete(string id);
+        Task<bool> Delete(string id);
         Task DropTable();
     }
 }

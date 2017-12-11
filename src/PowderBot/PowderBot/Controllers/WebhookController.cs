@@ -45,7 +45,7 @@ namespace PowderBot.Controllers
         }
 
         [HttpPost]
-        async public Task<IActionResult> Post([FromBody]Event<TextMessage> body)
+        async public Task<IActionResult> Post([FromBody]Event<ApiTypes.Facebook.TextMessage> body)
         {
             await _requestRepo.InsertOrReplace(new RequestModel("42")
                                                {
@@ -59,11 +59,14 @@ namespace PowderBot.Controllers
             var user = await _userRepo.Get(entry.Messaging.First().Sender.Id);
             try
             {
+                var messageText = entry.Messaging.First().Message.QuickReply.Payload
+                    ?? entry.Messaging.First().Message.Text;
                 var (message, updatedUser) = await _commandFactory
-                    .Create(entry.Messaging.First().Message.Text)
-                    .Process(user);
+                    .Create(user, messageText)
+                    .Process();
                 await _facebookClient.SendMessage(updatedUser.Id, message);
                 updatedUser.Gmt = await _facebookClient.QueryUserTimezone(updatedUser.Id);
+                updatedUser.LastCommand = messageText;
                 await _userRepo.Save(updatedUser);
                 return Ok(message);
             }

@@ -19,7 +19,7 @@ namespace BusinessLogic
             _snowfallChecker = snowfallChecker;
         }
 
-        public ICommandStrategy Create(string message)
+        public ICommandStrategy Create(UserModel user, string message)
         {
             var words = message
                 .Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
@@ -27,16 +27,24 @@ namespace BusinessLogic
             switch (words.First())
             {
             case "check":
-                return new CheckStrategy(_subscriptionRepo, _snowfallChecker);
+                return new CheckStrategy(user, _subscriptionRepo, _snowfallChecker);
+            case "sb":
             case "subscribe":
-                return new SubscribeStrategy(words.ToArray(), _subscriptionRepo);
+                return new SubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
+            case "unsb":
             case "unsubscribe":
-                return new UnsubscribeStrategy(words.ToArray(), _subscriptionRepo);
+                return new UnsubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
+            case "ls":
             case "list":
-                return new ListStrategy(_subscriptionRepo);
-            default:
-                return new UsageStrategy();
+                return new ListStrategy(user, _subscriptionRepo);
             }
+            if (user.LastCommand != null)
+            {
+                var newCommand = $"{user.LastCommand} {message}";
+                user.LastCommand = null;
+                return Create(user, newCommand);
+            }
+            return new UsageStrategy(user);
         }
     }
 }

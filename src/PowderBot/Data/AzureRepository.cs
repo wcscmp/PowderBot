@@ -50,16 +50,17 @@ namespace Data
             await _table.ExecuteAsync(insertOperation);
         }
 
-        public async Task Delete(string id)
+        public async Task<bool> Delete(string id)
         {
             var entity = await Get(id);
             if (entity == null)
             {
-                return;
+                return false;
             }
 
             var insertOperation = TableOperation.Delete(entity);
             await _table.ExecuteAsync(insertOperation);
+            return true;
         }
 
         public async Task DropTable()

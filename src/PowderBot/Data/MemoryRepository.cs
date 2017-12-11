@@ -33,10 +33,9 @@ namespace Data
             return Task.CompletedTask;
         }
 
-        public Task Delete(string id)
+        public Task<bool> Delete(string id)
         {
-            _table.Remove(id);
-            return Task.CompletedTask;
+            return Task.FromResult(_table.Remove(id));
         }
 
         public Task DropTable()

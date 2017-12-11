@@ -19,7 +19,7 @@ namespace Data
             return _repo.Get(new Models.SubscriptionModel(userId, uri).RowKey);
         }
 
-        public Task Delete(string userId, string uri)
+        public Task<bool> Delete(string userId, string uri)
         {
             return _repo.Delete(new Models.SubscriptionModel(userId, uri).RowKey);
         }

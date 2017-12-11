@@ -5,62 +5,72 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WebClient;
 
 namespace BusinessLogic
 {
     public class SubscribeStrategy : ICommandStrategy
     {
+        private readonly UserModel _user;
         private readonly string[] _words;
         private readonly SubscriptionRepository _repo;
         private static readonly Regex _snowfallRe
-            = new Regex(@"^(\d+)(inch|cm)$", RegexOptions.IgnoreCase);
+            = new Regex(@"^(\d+)([a-z]*)$", RegexOptions.IgnoreCase);
 
-        public SubscribeStrategy(string[] words, SubscriptionRepository repo)
+        public SubscribeStrategy(UserModel user, string[] words, SubscriptionRepository repo)
         {
+            _user = user;
             _words = words;
             _repo = repo;
         }
 
-        async public Task<(string, UserModel)> Process(UserModel user)
+        async public Task<(IMessage, UserModel)> Process()
         {
             var (snowfall, errorMessage) = parse();
-            if (errorMessage != string.Empty)
+            if (errorMessage != null)
             {
-                return (errorMessage, user);
+                return (errorMessage, _user);
             }
-            await _repo.Save(new SubscriptionModel(user.Id, _words[1])
+            await _repo.Save(new SubscriptionModel(_user.Id, _words[1])
                              {
                                  Snowfall = snowfall
                              });
-            return ("Subscribtion added", user);
+            return (new TextMessage(_user.Id, "Subscribtion added"), _user);
         }
 
-        private (int, string) parse()
+        private (int, IMessage) parse()
         {
-            if (_words.Length != 3)
+            if (_words.Length == 1)
             {
-                return (0, Parameters);
+                return (0, new TextMessage(_user.Id,
+                                           "Enter a http://www.snow-forecast.com link to follow"));
+            }
+            if (_words.Length == 2)
+            {
+                return (0, new TextMessage(_user.Id, "Enter a snowfall threshhold"));
             }
             var m = _snowfallRe.Match(_words.Last());
             if (!m.Success)
             {
-                return (0, "Snowfall should be a number followed by inch or cm without a space");
+                return (0, new TextMessage(_user.Id,
+                                           "Snowfall should be a number followed by inch or cm"));
             }
             var snowfall = int.Parse(m.Groups[1].Captures[0].Value);
             if (m.Groups[2].Captures[0].Value == "inch")
             {
-                return (snowfall.InchToCm(), string.Empty);
+                return (snowfall.InchToCm(), null);
             }
-            return (snowfall, string.Empty);
+            if (m.Groups[2].Captures[0].Value == "cm")
+            {
+                return (snowfall, null);
+            }
+            return (0, new ListMessage(_user.Id,
+                                       "Choose measurement units",
+                                       string.Join(" ", _words.Take(2)) +
+                                           m.Groups[1].Captures[0].Value,
+                                       new string[] { "cm", "inch" }));
         }
 
-        public const string Parameters
-            = "subscribe <snow forecast url> <snowfall threshold>\n" +
-              "    For example:\n" +
-              "    subscribe http://www.snow-forecast.com/resorts/Gulmarg/6day/mid 40cm\n" +
-              "    subscribe http://www.snow-forecast.com/resorts/Snowbird/6day/mid 10inch";
-
-        public const string Usage = "subscribe <snow forecast url> <snowfall threshold>\n" +
-                                    "    get notification about snowfall bigger then threshold";
+        public const string Usage = "sb/subscribe - follow resort's forecast";
     }
 }

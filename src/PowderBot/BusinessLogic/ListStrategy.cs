@@ -3,30 +3,30 @@ using Data.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using WebClient;
 
 namespace BusinessLogic
 {
     public class ListStrategy : ICommandStrategy
     {
-        SubscriptionRepository _repo;
+        private readonly UserModel _user;
+        private readonly SubscriptionRepository _repo;
 
-        public ListStrategy(SubscriptionRepository repo)
+        public ListStrategy(UserModel user, SubscriptionRepository repo)
         {
+            _user = user;
             _repo = repo;
         }
 
-        async public Task<(string, UserModel)> Process(UserModel user)
+        async public Task<(IMessage, UserModel)> Process()
         {
-            var subscriptionsByUser = await _repo.GetByUser(user.Id);
-            var subscriptions = string.Join("\n", subscriptionsByUser.Select(s => s.Uri));
-            if (subscriptions == string.Empty)
-            {
-                subscriptions = "You have no subsctiptions";
-            }
-            return (subscriptions, user);
+            var subscriptionsByUser = await _repo.GetByUser(_user.Id);
+            var subscriptions = subscriptionsByUser.Any()
+                ? string.Join("\n", subscriptionsByUser.Select(s => s.Uri))
+                : "You have no subsctiptions";
+            return (new TextMessage(_user.Id, subscriptions), _user);
         }
 
-        public const string Usage = "list\n" +
-                                    "    show info on your subscriptions";
+        public const string Usage = "list - show your subscriptions";
     }
 }

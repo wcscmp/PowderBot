@@ -1,11 +1,12 @@
 ﻿using Data.Models;
 using System;
 using System.Threading.Tasks;
+using WebClient;
 
 namespace BusinessLogic
 {
     public interface ICommandStrategy
     {
-        Task<(string, UserModel)> Process(UserModel user);
+        Task<(IMessage, UserModel)> Process();
     }
 }

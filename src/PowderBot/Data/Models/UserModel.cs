@@ -31,5 +31,6 @@ namespace Data.Models
         public int NotifyAfter { get; set; }
         public int NotifyBefore { get; set; }
         public int Gmt { get; set; }
+        public string LastCommand { get; set; }
     }
 }

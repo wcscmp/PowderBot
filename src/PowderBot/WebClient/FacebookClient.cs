@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace WebClient
 {
-    public class FacebookClient
+    public class FacebookClient : IMessanger
     {
         private readonly HttpClient _client;
         private const string _facebookUrl = "https://graph.facebook.com/v2.6";
@@ -45,30 +45,26 @@ namespace WebClient
             return JsonConvert.DeserializeObject<ProfileQueryResponse>(responseJson).Timezone;
         }
 
-        public async Task SendMessage(string userId, string text)
+        public async Task SendMessage<T>(string userId, T message)
         {
-            var message = new MessageResponse
+            var m = new MessageResponse<T>
             {
                 Recipient = new User
                 {
                     Id = userId
                 },
-                Message = new TextData
-                {
-                    Text = text
-                }
+                Message = message
             };
-            var stringPayload
-                = JsonConvert.SerializeObject(message, Formatting.None, new JsonSerializerSettings
+            var json
+                = JsonConvert.SerializeObject(m, Formatting.None, new JsonSerializerSettings
                 {
                     ContractResolver = new DefaultContractResolver
                     {
                         NamingStrategy = new SnakeCaseNamingStrategy()
                     }
                 });
-            var pushContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-            var uri = createRequestUri("me/messages");
-            await _client.PostAsync(uri, pushContent);
+            var pushContent = new StringContent(json, Encoding.UTF8, "application/json");
+            await _client.PostAsync(createRequestUri("me/messages"), pushContent);
         }
 
         private string createRequestUri(string request,

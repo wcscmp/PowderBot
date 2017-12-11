@@ -22,9 +22,11 @@ namespace UnitTests
                 .Setup(mock => mock.GetAll())
                 .ReturnsAsync(uris.Select(uri => new SubscriptionModel(userId, uri)));
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
-            var (message, _) = await new ListStrategy(subscriptionRepo)
-                .Process(new UserModel(userId));
-            Assert.IsTrue(uris.All(uri => message.Contains(uri)));
+            var (message, _) = await new ListStrategy(new UserModel(userId), subscriptionRepo)
+                .Process();
+            var messanger = new TestMessanger();
+            await message.SendMessage(messanger);
+            Assert.IsTrue(uris.All(uri => messanger.Text.Contains(uri)));
         }
     }
 }

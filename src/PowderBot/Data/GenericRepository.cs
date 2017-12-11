@@ -36,7 +36,7 @@ namespace Data
             return _impl.InsertOrReplace(entity);
         }
 
-        public Task Delete(string id)
+        public Task<bool> Delete(string id)
         {
             return _impl.Delete(id);
         }

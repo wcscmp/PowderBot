@@ -24,6 +24,29 @@ namespace PowderBot.ApiTypes.Facebook
         public string Text { get; set; }
     }
 
+    public class ListButton : TextData
+    {
+        public string Type => "postback";
+        public string Payload { get; set; }
+    }
+
+    public class ListPayload : TextData
+    {
+        public string TemplateType => "button";
+        public ListButton[] Buttons { get; set; }
+    }
+
+    public class ListAttachment
+    {
+        public string Type => "template";
+        public ListPayload Payload { get; set; }
+    }
+
+    public class ListData
+    {
+        public ListAttachment Attachment { get; set; }
+    }
+
     public class TextMessageBody : TextData
     {
         public string Mid { get; set; }
@@ -52,9 +75,9 @@ namespace PowderBot.ApiTypes.Facebook
         public List<Entry<T>> Entry { get; set; }
     }
 
-    public class MessageResponse
+    public class MessageResponse<T>
     {
         public User Recipient { get; set; }
-        public TextData Message { get; set; }
+        public T Message { get; set; }
     }
 }

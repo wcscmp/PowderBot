@@ -40,7 +40,7 @@ namespace PowderBot
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<SubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<CommandFactory, CommandFactory>();
-            services.AddScoped<FacebookClient, FacebookClient>();
+            services.AddScoped<IMessanger, FacebookClient>();
             services.AddScoped<ISnowForecastClient, SnowForecastClient>();
             services.AddScoped<SnowfallChecker, SnowfallChecker>();
         }
