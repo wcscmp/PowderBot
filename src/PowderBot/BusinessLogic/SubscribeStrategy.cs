@@ -15,7 +15,7 @@ namespace BusinessLogic
         private readonly string[] _words;
         private readonly SubscriptionRepository _repo;
         private static readonly Regex _snowfallRe
-            = new Regex(@"^(\d+)([a-z]*)$", RegexOptions.IgnoreCase);
+            = new Regex(@"^(\d+)([a-z]*)?$", RegexOptions.IgnoreCase);
 
         public SubscribeStrategy(UserModel user, string[] words, SubscriptionRepository repo)
         {
