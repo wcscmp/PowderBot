@@ -48,7 +48,7 @@ namespace BusinessLogic
             if (_words.Length == 2)
             {
                 _user.LastCommand = string.Join(" ", _words);
-                return (0, new TextMessage("Enter a snowfall threshhold"));
+                return (0, new TextMessage("Enter a snowfall threshold"));
             }
             if (!Uri.IsWellFormedUriString(_words[1], UriKind.Absolute))
             {
@@ -57,18 +57,19 @@ namespace BusinessLogic
             var m = _snowfallRe.Match(_words.Last());
             if (!m.Success)
             {
-                return (0, new TextMessage("Snowfall should be a number followed by inch or cm"));
+                _user.LastCommand = string.Join(" ", _words.Take(2));
+                return (0, new TextMessage("Please enter a number for the threshold"));
             }
             var snowfall = int.Parse(m.Groups[1].Captures[0].Value);
-            if (m.Groups[2].Captures[0].Value == "inch")
+            var units = _words.Length > 3 ? _words[3] : m.Groups[2].Captures[0].Value;
+            switch (units)
             {
+            case "inch":
                 return (snowfall.InchToCm(), null);
-            }
-            if (m.Groups[2].Captures[0].Value == "cm")
-            {
+            case "cm":
                 return (snowfall, null);
             }
-            var baseText = $"{string.Join(" ", _words.Take(2))} {m.Groups[1].Captures[0].Value}";
+            var baseText = $"{string.Join(" ", _words.Take(2))} {snowfall}";
             return (0, new ListMessage("Choose measurement units", baseText,
                                        new string[] { "cm", "inch" }));
         }
