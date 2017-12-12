@@ -44,10 +44,9 @@ namespace PowderBot.Controllers
             return Ok(Request.Query["hub.challenge"].First());
         }
 
-        [HttpPost]
+        /*[HttpPost]
         async public Task<IActionResult> Post([FromBody]Event body)
         {
-            await saveRequest();
             if (body.Object != null && body.Object != "page")
             {
                 return NotFound();
@@ -72,9 +71,9 @@ namespace PowderBot.Controllers
                     .SendMessage(user.Id, _messanger);
                 return Ok();
             }
-        }
+        }*/
 
-        async private Task saveRequest()
+        async public Task<IActionResult> Post()
         {
             using (var sr = new StreamReader(Request.Body))
             {
@@ -83,6 +82,7 @@ namespace PowderBot.Controllers
                     Message = sr.ReadToEnd()
                 });
             }
+            return Ok();
         }
     }
 }
