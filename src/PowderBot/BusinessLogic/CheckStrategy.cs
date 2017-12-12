@@ -31,7 +31,7 @@ namespace BusinessLogic
                 return (new TextMessage("Nothing good"), _user);
             }
             var uris = snowfall.First().Subscriptions.Select(s => s.Uri);
-            return (new TextMessage("Check this out:\n" + string.Join("\n", uris)), _user);
+            return (new MultiTextMessage(uris, "Check this out:"), _user);
         }
 
         public const string Usage = "check - check your subscriptions";

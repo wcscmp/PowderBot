@@ -21,7 +21,14 @@ namespace Data
 
         public Task<bool> Delete(string userId, string uri)
         {
-            return _repo.Delete(new Models.SubscriptionModel(userId, uri).RowKey);
+            if (Uri.IsWellFormedUriString(uri, UriKind.Absolute))
+            {
+                return _repo.Delete(new Models.SubscriptionModel(userId, uri).RowKey);
+            }
+            else
+            {
+                return _repo.Delete(userId + uri.ToLower());
+            }
         }
 
         public async Task<IEnumerable<Models.SubscriptionModel>> GetOlderThen(DateTimeOffset time)
@@ -30,10 +37,9 @@ namespace Data
             return all.Where(s => s.Timestamp < time);
         }
 
-        public async Task<IEnumerable<Models.SubscriptionModel>> GetByUser(string userId)
+        public Task<IEnumerable<Models.SubscriptionModel>> GetByUser(string userId)
         {
-            var all = await _repo.GetAll();
-            return all.Where(s => s.UserId == userId);
+            return _repo.GetByCustomField("UserId", userId);
         }
 
         public async Task Save(Models.SubscriptionModel subscription)

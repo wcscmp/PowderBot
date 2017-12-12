@@ -27,6 +27,13 @@ namespace Data
             return Task.FromResult((T)null);
         }
 
+        public Task<IEnumerable<T>> GetByCustomField(string fieldName, string value)
+        {
+            var property = typeof(T).GetProperty(fieldName);
+            return Task.FromResult(
+                _table.Values.Where(v => ((string)property.GetValue(v, null)) == value));
+        }
+
         public Task InsertOrReplace(T entity)
         {
             _table[entity.RowKey] = entity;

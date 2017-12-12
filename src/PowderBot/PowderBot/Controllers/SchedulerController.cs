@@ -45,8 +45,8 @@ namespace PowderBot.Controllers
 
         private async Task notify(string userId, IEnumerable<SubscriptionModel> subs)
         {
-            var uris = string.Join("\n", subs.Select(s => s.Uri));
-            await new TextMessage("Check this out:\n" + uris).SendMessage(userId, _messanger);
+            await new MultiTextMessage(subs.Select(s => s.Uri), "Check this out:")
+                .SendMessage(userId, _messanger);
         }
     }
 }

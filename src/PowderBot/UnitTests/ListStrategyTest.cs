@@ -4,7 +4,6 @@ using Data.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace UnitTests
 {
@@ -17,11 +16,10 @@ namespace UnitTests
             const string userId = "42";
             var uris = new string[]{"http://www.snow-forecast.com/resorts/Alta/6day/mid",
                                     "http://www.snow-forecast.com/resorts/Solitude/6day/mid"};
-            var subscriptionRepoMock = new Mock<IGenericRepository<SubscriptionModel>>();
-            subscriptionRepoMock
-                .Setup(mock => mock.GetAll())
-                .ReturnsAsync(uris.Select(uri => new SubscriptionModel(userId, uri)));
-            var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
+            var internalRepo = new MemoryRepository<SubscriptionModel>();
+            await Task.WhenAll(uris.Select(uri =>
+                internalRepo.InsertOrReplace(new SubscriptionModel(userId, uri))));
+            var subscriptionRepo = new SubscriptionRepository(internalRepo);
             var (message, _) = await new ListStrategy(new UserModel(userId), subscriptionRepo)
                 .Process();
             var messanger = new TestMessanger();

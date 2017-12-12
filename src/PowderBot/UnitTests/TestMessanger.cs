@@ -14,7 +14,11 @@ namespace UnitTests
 
         public Task SendMessage<T>(string userId, T message)
         {
-            Text = matchMessage(message);
+            if (Text != null)
+            {
+                Text = Text + "\n";
+            }
+            Text = Text + matchMessage(message);
             return Task.CompletedTask;
         }
 

@@ -31,6 +31,11 @@ namespace Data
             return _impl.Get(id);
         }
 
+        public Task<IEnumerable<T>> GetByCustomField(string fieldName, string value)
+        {
+            return _impl.GetByCustomField(fieldName, value);
+        }
+
         public Task InsertOrReplace(T entity)
         {
             return _impl.InsertOrReplace(entity);

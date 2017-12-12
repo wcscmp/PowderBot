@@ -40,10 +40,11 @@ namespace BusinessLogic
 
         private (int, IMessage) parse()
         {
-            if (_words.Length == 1)
+            if (_words.Length == 1 || !Uri.IsWellFormedUriString(_words[1], UriKind.Absolute)
+                || !_words[1].Contains("snow-forecast") || !_words[1].Contains("/resorts/"))
             {
-                _user.LastCommand = string.Join(" ", _words);
-                return (0, new TextMessage("Enter a http://www.snow-forecast.com link"));
+                _user.LastCommand = _words.First();
+                return (0, new TextMessage("Enter a valid http://www.snow-forecast.com link"));
             }
             if (_words.Length == 2)
             {

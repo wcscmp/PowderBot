@@ -29,12 +29,9 @@ namespace BusinessLogic
                 var subscriptions = await _repo.GetByUser(_user.Id);
                 if (subscriptions.Any() && subscriptions.Count() <= 10)
                 {
-                    var uris = (new string[] { "all" }).Concat(subscriptions.Select(s => s.Uri));
-                    var texts = (new string[] { "all" })
+                    var resorts = (new string[] { "all" })
                         .Concat(subscriptions.Select(s => s.GetResortName()));
-                    return (new ListMessage("From what?", $"{string.Join(" ", _words)} ",
-                                            uris, texts),
-                            _user);
+                    return (new ListMessage("From what?", "unsb ", resorts), _user);
                 }
             }
             if (_words.Length != 2)

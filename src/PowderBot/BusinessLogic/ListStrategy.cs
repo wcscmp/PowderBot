@@ -21,10 +21,12 @@ namespace BusinessLogic
         async public Task<(IMessage, UserModel)> Process()
         {
             var subscriptionsByUser = await _repo.GetByUser(_user.Id);
-            var subscriptions = subscriptionsByUser.Any()
-                ? string.Join("\n", subscriptionsByUser.Select(s => s.Uri))
-                : "You have no subsctiptions";
-            return (new TextMessage(subscriptions), _user);
+            if (!subscriptionsByUser.Any())
+            {
+                return (new TextMessage("You have no subsctiptions"), _user);
+            }
+            return (new MultiTextMessage(subscriptionsByUser.Select(s => s.GetResortName())),
+                    _user);
         }
 
         public const string Usage = "ls/list - show your subscriptions";

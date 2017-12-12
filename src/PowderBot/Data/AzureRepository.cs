@@ -20,18 +20,22 @@ namespace Data
             _table = tableClient.GetTableReference(tableName);
         }
 
-        public async Task<IEnumerable<T>> GetAll()
+        private async Task<IEnumerable<T>> executeQuery(TableQuery<T> query)
         {
             TableContinuationToken token = null;
             var result = new List<T>();
             do
             {
-                var queryResult = await _table.ExecuteQuerySegmentedAsync(new TableQuery<T>(), token);
+                var queryResult = await _table.ExecuteQuerySegmentedAsync(query, token);
                 result.AddRange(queryResult.Results);
                 token = queryResult.ContinuationToken;
             } while (token != null);
-
             return result;
+        }
+
+        public Task<IEnumerable<T>> GetAll()
+        {
+            return executeQuery(new TableQuery<T>());
         }
 
         public async Task<T> Get(string id)
@@ -40,6 +44,13 @@ namespace Data
             var retrievedResult = await _table.ExecuteAsync(retrieveOperation);
 
             return (T)retrievedResult?.Result;
+        }
+
+        public Task<IEnumerable<T>> GetByCustomField(string fieldName, string value)
+        {
+            var query = new TableQuery<T>().Where(
+                TableQuery.GenerateFilterCondition(fieldName, QueryComparisons.Equal, value));
+            return executeQuery(query);
         }
 
         public async Task InsertOrReplace(T entity)
