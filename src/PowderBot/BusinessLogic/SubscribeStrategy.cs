@@ -54,7 +54,7 @@ namespace BusinessLogic
             {
                 _words[1] = "http://" + _words[1];
             }
-            var m = _snowfallRe.Match(_words.Last());
+            var m = _snowfallRe.Match(_words[2]);
             if (!m.Success)
             {
                 _user.LastCommand = string.Join(" ", _words.Take(2));
