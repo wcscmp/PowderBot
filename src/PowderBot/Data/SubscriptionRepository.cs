@@ -21,7 +21,7 @@ namespace Data
 
         public Task<bool> Delete(string userId, string uri)
         {
-            if (Uri.IsWellFormedUriString(uri, UriKind.Absolute))
+            if (Uri.IsWellFormedUriString(uri, UriKind.RelativeOrAbsolute))
             {
                 return _repo.Delete(new Models.SubscriptionModel(userId, uri).RowKey);
             }
