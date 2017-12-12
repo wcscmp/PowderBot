@@ -14,17 +14,17 @@ namespace UnitTests
         public async Task UrisAreListed()
         {
             const string userId = "42";
-            var uris = new string[]{"http://www.snow-forecast.com/resorts/Alta/6day/mid",
-                                    "http://www.snow-forecast.com/resorts/Solitude/6day/mid"};
+            var subs = new SubscriptionModel[]{
+                new SubscriptionModel(userId, "http://www.snow-forecast.com/resorts/Alta/6day/mid"),
+                new SubscriptionModel(userId, "http://www.snow-forecast.com/resorts/Solitude/6day/mid")};
             var internalRepo = new MemoryRepository<SubscriptionModel>();
-            await Task.WhenAll(uris.Select(uri =>
-                internalRepo.InsertOrReplace(new SubscriptionModel(userId, uri))));
+            await Task.WhenAll(subs.Select(s => internalRepo.InsertOrReplace(s)));
             var subscriptionRepo = new SubscriptionRepository(internalRepo);
             var (message, _) = await new ListStrategy(new UserModel(userId), subscriptionRepo)
                 .Process();
             var messanger = new TestMessanger();
             await message.SendMessage(userId, messanger);
-            Assert.IsTrue(uris.All(uri => messanger.Text.Contains(uri)));
+            Assert.IsTrue(subs.All(s => messanger.Text.Contains(s.GetResortName())));
         }
     }
 }

@@ -18,7 +18,10 @@ namespace WebClient
 
         public async Task SendMessage(string userId, IMessanger client)
         {
-            await _title?.SendMessage(userId, client);
+            if (_title != null)
+            {
+                await _title.SendMessage(userId, client);
+            }
             await Task.WhenAll(_texts.Select(t => t.SendMessage(userId, client)));
         }
     }
