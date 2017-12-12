@@ -31,7 +31,7 @@ namespace BusinessLogic
                 {
                     var resorts = (new string[] { "all" })
                         .Concat(subscriptions.Select(s => s.GetResortName()));
-                    return (new ListMessage("From what?", "unsb ", resorts), _user);
+                    return (new ListMessage("What from?", "unsb ", resorts), _user);
                 }
             }
             if (_words.Length != 2)
