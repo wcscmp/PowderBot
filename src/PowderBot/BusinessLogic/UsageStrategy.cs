@@ -8,6 +8,11 @@ namespace BusinessLogic
     public class UsageStrategy : ICommandStrategy
     {
         private readonly UserModel _user;
+        private readonly string[] usages = new string[] {
+            CheckStrategy.Usage,
+            SubscribeStrategy.Usage,
+            ListStrategy.Usage,
+            UnsubscribeStrategy.Usage};
 
         public UsageStrategy(UserModel user)
         {
@@ -16,12 +21,7 @@ namespace BusinessLogic
 
         public Task<(IMessage, UserModel)> Process()
         {
-            const string usage = "Usage:\n" +
-                                 CheckStrategy.Usage + "\n" +
-                                 SubscribeStrategy.Usage + "\n" +
-                                 ListStrategy.Usage + "\n" +
-                                 UnsubscribeStrategy.Usage;
-            IMessage message = new TextMessage(usage);
+            IMessage message = new MultiTextMessage(usages, "Usage:");
             return Task.FromResult((message, _user));
         }
     }
