@@ -1,5 +1,6 @@
 using PowderBot.ApiTypes.Facebook;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebClient;
 
@@ -7,6 +8,8 @@ namespace UnitTests
 {
     public class TestMessanger : IMessanger
     {
+        private readonly List<string> _messages = new List<string>();
+
         public Task<int> QueryUserTimezone(string userId)
         {
             return Task.FromResult(0);
@@ -14,11 +17,7 @@ namespace UnitTests
 
         public Task SendMessage<T>(string userId, T message)
         {
-            if (Text != null)
-            {
-                Text = Text + "\n";
-            }
-            Text = Text + matchMessage(message);
+            _messages.Add(matchMessage(message));
             return Task.CompletedTask;
         }
 
@@ -31,6 +30,6 @@ namespace UnitTests
             return string.Empty;
         }
 
-        public string Text { get; private set; }
+        public string Text => string.Join("\n", _messages);
     }
 }
