@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebClient;
-using Newtonsoft.Json;
 
 namespace PowderBot.Controllers
 {
@@ -48,10 +47,7 @@ namespace PowderBot.Controllers
         [HttpPost]
         async public Task<IActionResult> Post([FromBody]Event body)
         {
-            await _requestRepo.InsertOrReplace(new RequestModel("42")
-                                               {
-                                                   Message = JsonConvert.SerializeObject(body)
-                                               });
+            await saveRequest();
             if (body.Object != null && body.Object != "page")
             {
                 return NotFound();
@@ -75,6 +71,17 @@ namespace PowderBot.Controllers
                 await new WebClient.TextMessage("Sorry, something went wrong")
                     .SendMessage(user.Id, _messanger);
                 return Ok();
+            }
+        }
+
+        async private Task saveRequest()
+        {
+            using (var sr = new StreamReader(Request.Body))
+            {
+                await _requestRepo.InsertOrReplace(new RequestModel("42")
+                {
+                    Message = sr.ReadToEnd()
+                });
             }
         }
     }
