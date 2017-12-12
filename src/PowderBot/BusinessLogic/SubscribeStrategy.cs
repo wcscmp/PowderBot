@@ -50,6 +50,10 @@ namespace BusinessLogic
                 _user.LastCommand = string.Join(" ", _words);
                 return (0, new TextMessage("Enter a snowfall threshhold"));
             }
+            if (!Uri.IsWellFormedUriString(_words[1], UriKind.Absolute))
+            {
+                _words[1] = "http://" + _words[1];
+            }
             var m = _snowfallRe.Match(_words.Last());
             if (!m.Success)
             {
