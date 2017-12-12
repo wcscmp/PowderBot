@@ -40,9 +40,7 @@ namespace BusinessLogic
 
         private (int, IMessage) parse()
         {
-            if (_words.Length == 1
-                || !Uri.IsWellFormedUriString(_words[1], UriKind.RelativeOrAbsolute)
-                || !_words[1].Contains("snow-forecast") || !_words[1].Contains("/resorts/"))
+            if (_words.Length == 1 || !SubscriptionModel.IsValidUri(_words[1]))
             {
                 _user.LastCommand = _words.First();
                 return (0, new TextMessage("Enter a valid http://www.snow-forecast.com link"));

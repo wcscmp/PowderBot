@@ -44,7 +44,7 @@ namespace PowderBot.Controllers
             return Ok(Request.Query["hub.challenge"].First());
         }
 
-        /*[HttpPost]
+        [HttpPost]
         async public Task<IActionResult> Post([FromBody]Event body)
         {
             if (body.Object != null && body.Object != "page")
@@ -71,18 +71,6 @@ namespace PowderBot.Controllers
                     .SendMessage(user.Id, _messanger);
                 return Ok();
             }
-        }*/
-
-        async public Task<IActionResult> Post()
-        {
-            using (var sr = new StreamReader(Request.Body))
-            {
-                await _requestRepo.InsertOrReplace(new RequestModel("42")
-                {
-                    Message = sr.ReadToEnd()
-                });
-            }
-            return Ok();
         }
     }
 }

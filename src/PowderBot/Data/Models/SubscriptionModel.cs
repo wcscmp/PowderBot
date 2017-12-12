@@ -20,6 +20,11 @@ namespace Data.Models
         {
         }
 
+        public static bool IsValidUri(string uri)
+        {
+            return uri.ToLower().Contains("snow-forecast.com/resorts/");
+        }
+
         public string GetResortName()
         {
             return Uri.Split(new Char[]{'/'})
