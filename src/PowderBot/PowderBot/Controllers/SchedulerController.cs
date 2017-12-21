@@ -35,8 +35,11 @@ namespace PowderBot.Controllers
             var now = DateTimeOffset.UtcNow;
             var subscriptions = await _subscriptionRepo.GetAll();
             var users = await _userRepo.GetUsersWhoCanBeNotified(now);
-            var snowfall = await _snowfallChecker
-                .Check(users, subscriptions, (u, s) => !s.UpdatedToday(u, now));
+            var subscriptionsForUsers = subscriptions
+                .Join(users, s => s.UserId, u => u.Id, (s, u) => (u, s))
+                .Where(joined => !joined.Item2.UpdatedToday(joined.Item1, now))
+                .Select(joined => joined.Item2);
+            var snowfall = await _snowfallChecker.Check(subscriptionsForUsers);
             var notifyTasks = snowfall.Select(s => notify(s.UserId, s.Subscriptions));
             var saveTasks = snowfall
                 .SelectMany(s => _subscriptionRepo.CreateSaveTasks(s.Subscriptions));
