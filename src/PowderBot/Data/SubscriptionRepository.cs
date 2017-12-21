@@ -31,10 +31,9 @@ namespace Data
             }
         }
 
-        public async Task<IEnumerable<Models.SubscriptionModel>> GetOlderThen(DateTimeOffset time)
+        public Task<IEnumerable<Models.SubscriptionModel>> GetAll()
         {
-            var all = await _repo.GetAll();
-            return all.Where(s => s.Timestamp < time);
+            return _repo.GetAll();
         }
 
         public Task<IEnumerable<Models.SubscriptionModel>> GetByUser(string userId)

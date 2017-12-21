@@ -1,5 +1,6 @@
 using Data.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace UnitTests
 {
@@ -13,6 +14,28 @@ namespace UnitTests
         {
             const string userId = "42";
             Assert.AreEqual(userId + resort, new SubscriptionModel(userId, uri).RowKey);
+        }
+
+        [DataTestMethod]
+        [DataRow(0, true)]
+        [DataRow(7, true)]
+        [DataRow(-7, true)]
+        [DataRow(10, false)]
+        [DataRow(-10, true)]
+        [DataRow(20, false)]
+        [DataRow(-20, false)]
+        public void UpdatedTodayTest(int gmt, bool expected)
+        {
+            var user = new UserModel("42")
+            {
+                Gmt = gmt
+            };
+            var now = new DateTimeOffset(2017, 10, 10, 16, 0, 0, new TimeSpan());
+            var sub = new SubscriptionModel
+            {
+                Timestamp = now
+            };
+            Assert.AreEqual(expected, sub.UpdatedToday(user, now));
         }
     }
 }

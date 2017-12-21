@@ -33,6 +33,12 @@ namespace Data.Models
                    .First();
         }
 
+        public bool UpdatedToday(UserModel user, DateTimeOffset now)
+        {
+            var updateTimeInUsersTimeZone = Timestamp.AddHours(user.Gmt);
+            return updateTimeInUsersTimeZone.Date == now.Date;
+        }
+
         public string UserId { get; set; }
         public string Uri { get; set; }
         public int Snowfall { get; set; }

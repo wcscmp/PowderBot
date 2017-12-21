@@ -33,9 +33,10 @@ namespace PowderBot.Controllers
         async public Task<IActionResult> Post()
         {
             var now = DateTimeOffset.UtcNow;
-            var subscriptions = await _subscriptionRepo.GetOlderThen(now.AddMinutes(-23.5 * 60));
+            var subscriptions = await _subscriptionRepo.GetAll();
             var users = await _userRepo.GetUsersWhoCanBeNotified(now);
-            var snowfall = await _snowfallChecker.Check(users, subscriptions);
+            var snowfall = await _snowfallChecker
+                .Check(users, subscriptions, (u, s) => !s.UpdatedToday(u, now));
             var notifyTasks = snowfall.Select(s => notify(s.UserId, s.Subscriptions));
             var saveTasks = snowfall
                 .SelectMany(s => _subscriptionRepo.CreateSaveTasks(s.Subscriptions));

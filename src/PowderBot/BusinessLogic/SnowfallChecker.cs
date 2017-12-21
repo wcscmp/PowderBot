@@ -19,10 +19,13 @@ namespace BusinessLogic
 
         async public Task<IEnumerable<(string UserId, IEnumerable<SubscriptionModel> Subscriptions)>> Check(
             IEnumerable<UserModel> users,
-            IEnumerable<SubscriptionModel> subscriptions)
+            IEnumerable<SubscriptionModel> subscriptions,
+            Func<UserModel, SubscriptionModel, bool> filter)
         {
-            var userDict = users.ToDictionary(u => u.Id);
-            var subscriptionsForUsers = subscriptions.Where(s => userDict.ContainsKey(s.UserId));
+            var subscriptionsForUsers = subscriptions
+                .Join(users, s => s.UserId, u => u.Id, (s, u) => (u, s))
+                .Where(joined => filter(joined.Item1, joined.Item2))
+                .Select(joined => joined.Item2);
             var urls = subscriptionsForUsers
                 .GroupBy(s => s.Uri)
                 .Select(g => g.Key);
@@ -32,6 +35,13 @@ namespace BusinessLogic
                 .Where(s => snowfall.TryGetValue(s.Uri, out int forecast) && s.Snowfall <= forecast)
                 .GroupBy(s => s.UserId)
                 .Select(g => (g.Key, (IEnumerable<SubscriptionModel>)g));
+        }
+
+        public Task<IEnumerable<(string UserId, IEnumerable<SubscriptionModel> Subscriptions)>> Check(
+            IEnumerable<UserModel> users,
+            IEnumerable<SubscriptionModel> subscriptions)
+        {
+            return Check(users, subscriptions, (u, s) => true);
         }
     }
 }
