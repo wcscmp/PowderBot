@@ -10,9 +10,9 @@ namespace UnitTests
     {
         private readonly List<string> _messages = new List<string>();
 
-        public Task<int> QueryUserTimezone(string userId)
+        public Task<float> QueryUserTimezone(string userId)
         {
-            return Task.FromResult(0);
+            return Task.FromResult(0.0f);
         }
 
         public Task SendMessage<T>(string userId, T message)
