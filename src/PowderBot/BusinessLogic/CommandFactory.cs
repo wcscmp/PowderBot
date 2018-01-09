@@ -10,13 +10,13 @@ namespace BusinessLogic
     public class CommandFactory
     {
         private readonly SubscriptionRepository _subscriptionRepo;
-        private readonly SnowfallChecker _snowfallChecker;
+        private readonly ISnowForecastClient _snowForecastClient;
 
         public CommandFactory(SubscriptionRepository subscriptionRepo,
-                              SnowfallChecker snowfallChecker)
+                              ISnowForecastClient snowForecastClient)
         {
             _subscriptionRepo = subscriptionRepo;
-            _snowfallChecker = snowfallChecker;
+            _snowForecastClient = snowForecastClient;
         }
 
         public ICommandStrategy Create(UserModel user, string message)
@@ -29,7 +29,7 @@ namespace BusinessLogic
             switch (words.First())
             {
             case "check":
-                return new CheckStrategy(user, _subscriptionRepo, _snowfallChecker);
+                return new CheckStrategy(user, _subscriptionRepo, _snowForecastClient);
             case "sb":
             case "subscribe":
                 return new SubscribeStrategy(user, words.ToArray(), _subscriptionRepo);

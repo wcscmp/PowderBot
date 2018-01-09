@@ -11,27 +11,28 @@ namespace BusinessLogic
     {
         private readonly UserModel _user;
         private readonly SubscriptionRepository _repo;
-        private readonly SnowfallChecker _snowfallChecker;
+        private readonly ISnowForecastClient _snowForecastClient;
 
         public CheckStrategy(UserModel user,
                              SubscriptionRepository repo,
-                             SnowfallChecker snowfallChecker)
+                             ISnowForecastClient snowForecastClient)
         {
             _user = user;
             _repo = repo;
-            _snowfallChecker = snowfallChecker;
+            _snowForecastClient = snowForecastClient;
         }
 
         async public Task<(IMessage, UserModel)> Process()
         {
-            var subscriptions = await _repo.GetByUser(_user.Id);
-            var snowfall = await _snowfallChecker.Check(subscriptions);
+            var subscriptions = (await _repo.GetByUser(_user.Id)).ToDictionary(s => s.Uri);
+            var snowfall = await _snowForecastClient.GetSnowfall(subscriptions.Keys);
             if (!snowfall.Any())
             {
                 return (new TextMessage("Nothing good"), _user);
             }
-            var uris = snowfall.First().Subscriptions.Select(s => s.Uri);
-            return (new MultiTextMessage(uris, "Check this out:"), _user);
+            var uris = snowfall
+                .Select(s => $"${subscriptions[s.Uri].GetResortName()}: ${s.Snowfall}cm");
+            return (new MultiTextMessage(uris), _user);
         }
 
         public const string Usage = "check - check your subscriptions";

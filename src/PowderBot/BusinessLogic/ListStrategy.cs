@@ -25,8 +25,7 @@ namespace BusinessLogic
             {
                 return (new TextMessage("You have no subsctiptions"), _user);
             }
-            return (new MultiTextMessage(subscriptionsByUser.Select(s => s.GetResortName())),
-                    _user);
+            return (new MultiTextMessage(subscriptionsByUser.Select(s => s.Uri)), _user);
         }
 
         public const string Usage = "ls/list - show your subscriptions";

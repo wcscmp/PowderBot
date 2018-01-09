@@ -24,7 +24,7 @@ namespace UnitTests
                 .Process();
             var messanger = new TestMessanger();
             await message.SendMessage(userId, messanger);
-            Assert.IsTrue(subs.All(s => messanger.Text.Contains(s.GetResortName())));
+            Assert.IsTrue(subs.All(s => messanger.Text.Contains(s.Uri)));
         }
     }
 }
