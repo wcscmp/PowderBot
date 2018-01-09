@@ -31,7 +31,7 @@ namespace BusinessLogic
                 return (new TextMessage("Nothing good"), _user);
             }
             var uris = snowfall
-                .Select(s => $"${subscriptions[s.Uri].GetResortName()}: ${s.Snowfall}cm");
+                .Select(s => $"{subscriptions[s.Uri].GetResortName()}: {s.Snowfall}cm");
             return (new MultiTextMessage(uris), _user);
         }
 
