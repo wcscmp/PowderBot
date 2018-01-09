@@ -5,7 +5,7 @@ namespace WebClient
 {
     public interface IMessanger
     {
-        Task<int> QueryUserTimezone(string userId);
+        Task<float> QueryUserTimezone(string userId);
         Task SendMessage<T>(string userId, T message);
     }
 }
