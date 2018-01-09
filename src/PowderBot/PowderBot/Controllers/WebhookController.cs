@@ -18,16 +18,19 @@ namespace PowderBot.Controllers
     {
         public WebhookController(IMessanger messanger,
                                  CommandFactory commandFactory,
-                                 UserRepository userRepo)
+                                 UserRepository userRepo,
+                                 IGenericRepository<RequestModel> requestRepo)
         {
             _messanger = messanger;
             _commandFactory = commandFactory;
             _userRepo = userRepo;
+            _requestRepo = requestRepo;
         }
 
         private readonly IMessanger _messanger;
         private readonly CommandFactory _commandFactory;
         private readonly UserRepository _userRepo;
+        private readonly IGenericRepository<RequestModel> _requestRepo;
 
         [HttpGet]
         public IActionResult Get()
