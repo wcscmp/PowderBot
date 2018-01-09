@@ -36,7 +36,6 @@ namespace PowderBot
             services.AddSingleton<HttpClient, HttpClient>();
             services.AddScoped<IGenericRepository<UserModel>, GenericRepository<UserModel>>();
             services.AddScoped<IGenericRepository<SubscriptionModel>, GenericRepository<SubscriptionModel>>();
-            services.AddScoped<IGenericRepository<RequestModel>, GenericRepository<RequestModel>>();
             services.AddScoped<UserRepository, UserRepository>();
             services.AddScoped<SubscriptionRepository, SubscriptionRepository>();
             services.AddScoped<CommandFactory, CommandFactory>();
