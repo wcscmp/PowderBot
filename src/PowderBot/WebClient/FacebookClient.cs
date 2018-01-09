@@ -29,12 +29,12 @@ namespace WebClient
             public string LastName { get; set; }
             public string ProfilePic { get; set; }
             public string Locale { get; set; }
-            public float Timezone { get; set; }
+            public double Timezone { get; set; }
             public string Gender { get; set; }
             public object LastAdReferral { get; set; }
         }
 
-        public async Task<float> QueryUserTimezone(string userId)
+        public async Task<double> QueryUserTimezone(string userId)
         {
             var response = await _client.GetAsync(createRequestUri(userId, ("fields", "timezone")));
             if (response.StatusCode != HttpStatusCode.OK)
