@@ -13,11 +13,11 @@ namespace WebClient
             var document = new HtmlDocument();
             document.LoadHtml(html);
             bool isCm = document
-                .QuerySelectorAll("span.snowu")
+                .QuerySelectorAll("tr.lar span.snowu")
                 ?.Any(e => e.InnerText == "cm")
                 ?? true;
             var snowfall = document
-                .QuerySelectorAll("span.snow")
+                .QuerySelectorAll("tr.lar span.snow")
                 ?.Select(SnowfallCalculator.parse)
                 .Sum() ?? 0;
             return isCm ? (int)snowfall : snowfall.InchToCm();
