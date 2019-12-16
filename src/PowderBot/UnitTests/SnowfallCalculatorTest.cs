@@ -9,22 +9,26 @@ namespace UnitTests
         [DataTestMethod]
         [DataRow(
             @"<body>
-                <tr class=""lar"">
+                <tr class=""forecast-table-snow forecast-table__row"">
                     <th><div><span class=""snowu"">cm</span></div></th>
                     <td><div><span class=""snow"">-</span></div></td>
                 </tr>
             </body>", 0)]
         [DataRow(
             @"<body>
-                <tr class=""lar"">
+                <tr class=""forecast-table-snow forecast-table__row"">
                     <th><div><span class=""snowu"">cm</span></div></th>
                     <td><div><span class=""snow"">-</span></div></td>
-                    <td><div><span class=""snow"">14</span></div></td>
+                    <td><div>
+                        <span class=""snow has-value snow-larger-metric forecast-table-snow__value"">
+                            14
+                        </span>
+                    </div></td>
                 </tr>
             </body>", 14)]
         [DataRow(
             @"<body>
-                <tr class=""lar"">
+                <tr class=""forecast-table-snow forecast-table__row"">
                     <th><div><span class=""snowu"">in</span></div></th>
                     <td><div><span class=""snow"">-</span></div></td>
                     <td><div><span class=""snow"">5.5</span></div></td>
