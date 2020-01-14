@@ -14,7 +14,7 @@ namespace WebClient
     public class FacebookClient : IMessanger
     {
         private readonly HttpClient _client;
-        private const string _facebookUrl = "https://graph.facebook.com/v2.6";
+        private const string _facebookUrl = "https://graph.facebook.com/v5.0";
         private readonly string _accessToken;
 
         public FacebookClient(IOptions<FacebookConfiguration> config, HttpClient client)
