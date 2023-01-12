@@ -75,5 +75,10 @@ namespace WebClient
                 .Select(p => $"{p.Item1}={p.Item2}");
             return $"{_facebookUrl}/{request}?{string.Join("&", allParams)}";
         }
+
+        public Task SendMessage(string chatId, string message)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

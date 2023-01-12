@@ -1,8 +1,5 @@
 using Data;
 using Data.Models;
-using System;
-using System.Linq;
-using PowderBot.ApiTypes.Facebook;
 using WebClient;
 
 namespace BusinessLogic
@@ -28,16 +25,13 @@ namespace BusinessLogic
                 .Select(s => s.ToLowerInvariant());
             switch (words.First())
             {
-            case "check":
+            case "/check":
                 return new CheckStrategy(user, _subscriptionRepo, _snowForecastClient);
-            case "sb":
-            case "subscribe":
+            case "/subscribe":
                 return new SubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
-            case "unsb":
-            case "unsubscribe":
+            case "/unsubscribe":
                 return new UnsubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
-            case "ls":
-            case "list":
+            case "/list":
                 return new ListStrategy(user, _subscriptionRepo);
             }
             return lastCommand != null

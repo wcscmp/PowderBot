@@ -1,10 +1,5 @@
 using Data;
 using Data.Models;
-using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using PowderBot.ApiTypes.Facebook;
 using WebClient;
 
 namespace BusinessLogic
@@ -57,6 +52,6 @@ namespace BusinessLogic
             return (new TextMessage("Done"), _user);
         }
 
-        public const string Usage = "unsb/unsubscribe - stop following resort";
+        public const string Usage = "/unsubscribe - stop following resort";
     }
 }

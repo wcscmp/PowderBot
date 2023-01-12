@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Common.Converters
+﻿namespace Common.Converters
 {
     public static class ConvertersExtensions
     {

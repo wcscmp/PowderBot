@@ -6,7 +6,7 @@ using WebClient;
 
 namespace PowderBot.Controllers
 {
-    [Route("scheduler")]
+    [Route("Scheduler")]
     public class SchedulerController : Controller
     {
         public SchedulerController(IMessanger messanger,
@@ -36,14 +36,14 @@ namespace PowderBot.Controllers
                 .Where(joined => !joined.Item2.UpdatedToday(joined.Item1, now))
                 .Select(joined => joined.Item2);
             var snowfall = await _snowfallChecker.Check(subscriptionsForUsers);
-            var notifyTasks = snowfall.Select(s => notify(s.UserId, s.Subscriptions));
+            var notifyTasks = snowfall.Select(s => Notify(s.UserId, s.Subscriptions));
             var saveTasks = snowfall
                 .SelectMany(s => _subscriptionRepo.CreateSaveTasks(s.Subscriptions));
             await Task.WhenAll(notifyTasks.Concat(saveTasks));
             return Ok();
         }
 
-        private async Task notify(string userId, IEnumerable<SubscriptionModel> subs)
+        private async Task Notify(string userId, IEnumerable<SubscriptionModel> subs)
         {
             await new MultiTextMessage(subs.Select(s => s.Uri), "Check this out:")
                 .SendMessage(userId, _messanger);

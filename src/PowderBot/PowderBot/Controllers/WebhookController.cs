@@ -1,18 +1,24 @@
 ﻿using BusinessLogic;
 using Data;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PowderBot.ApiTypes.Facebook;
+using Telegram.Bot.Types;
 using WebClient;
 
 namespace PowderBot.Controllers
 {
-    [Route("webhook")]
+    [Route("TelegramWebhook")]
     public class WebhookController : Controller
     {
-        public WebhookController(IMessanger messanger,
-                                 CommandFactory commandFactory,
-                                 UserRepository userRepo)
+        private readonly ILogger<WebhookController> _logger;
+
+        public WebhookController(ILogger<WebhookController> logger,
+            IMessanger messanger,
+            CommandFactory commandFactory,
+            UserRepository userRepo)
         {
+            _logger = logger;
             _messanger = messanger;
             _commandFactory = commandFactory;
             _userRepo = userRepo;
@@ -22,26 +28,33 @@ namespace PowderBot.Controllers
         private readonly CommandFactory _commandFactory;
         private readonly UserRepository _userRepo;
 
-        [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Post([FromBody] HttpRequest req)
         {
-            const string verifyToken = "b940e968-d34c-11e7-9296-cec278b6b50a";
-            if (Request.Query["hub.mode"] != "subscribe"
-                || Request.Query["hub.verify_token"] != verifyToken)
-            {
-                return Forbid();
-            }
-            return Ok(Request.Query["hub.challenge"].First());
-        }
+            var emptyResult = new OkObjectResult(string.Empty);
 
-        [HttpPost]
-        async public Task<IActionResult> Post([FromBody]Event body)
-        {
-            if (body.Object != null && body.Object != "page")
+            try
             {
-                return NotFound();
+                using var sr = new StreamReader(req.Body);
+                var data = await sr.ReadToEndAsync();
+                var message = JsonConvert.DeserializeObject<Update>(data);
+
+                if (message?.Message == null)
+                    return emptyResult;
+
+                var name = message.Message.From.FirstName;
+
+                await _messanger.SendMessage("181945985", name);
             }
-            var entry = body.Entry.First();
+            catch (Exception e)
+            {
+                var message = $"Problems with handling Telegram message. Message: {e.Message}";
+
+                _logger.LogError(e.Message, e);
+            }
+
+            return emptyResult;
+
+            /*var entry = body.Entry.First();
             var user = await _userRepo.Get(entry.Messaging.First().Sender.Id);
             try
             {
@@ -60,7 +73,7 @@ namespace PowderBot.Controllers
                 await new WebClient.TextMessage("Sorry, something went wrong")
                     .SendMessage(user.Id, _messanger);
                 return Ok();
-            }
+            }*/
         }
     }
 }

@@ -38,6 +38,7 @@ void RegisterServices(IServiceCollection services, IConfiguration configuration)
     // Register configurations
     services.Configure<StorageConfiguration>(configuration.GetSection("Storage"));
     services.Configure<FacebookConfiguration>(configuration.GetSection("Facebook"));
+    services.Configure<TelegramConfiguration>(configuration.GetSection("Telegram"));
 
     // Solution services registration
     services.AddSingleton<HttpClient, HttpClient>();
@@ -46,7 +47,7 @@ void RegisterServices(IServiceCollection services, IConfiguration configuration)
     services.AddScoped<UserRepository, UserRepository>();
     services.AddScoped<SubscriptionRepository, SubscriptionRepository>();
     services.AddScoped<CommandFactory, CommandFactory>();
-    services.AddScoped<IMessanger, FacebookClient>();
+    services.AddScoped<IMessanger, TelegramClient>();
     services.AddScoped<ISnowForecastClient, SnowForecastClient>();
     services.AddScoped<SnowfallChecker, SnowfallChecker>();
 }

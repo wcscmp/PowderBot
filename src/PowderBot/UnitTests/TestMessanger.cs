@@ -30,6 +30,11 @@ namespace UnitTests
             return string.Empty;
         }
 
+        public Task SendMessage(string chatId, string message)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Text => string.Join("\n", _messages);
     }
 }

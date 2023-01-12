@@ -22,7 +22,11 @@ namespace WebClient
             {
                 await _title.SendMessage(userId, client);
             }
-            await Task.WhenAll(_texts.Select(t => t.SendMessage(userId, client)));
+
+            foreach (var text in _texts)
+            {
+                await text.SendMessage(userId, client);
+            }
         }
     }
 }

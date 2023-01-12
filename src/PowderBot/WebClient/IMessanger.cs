@@ -7,5 +7,6 @@ namespace WebClient
     {
         Task<double> QueryUserTimezone(string userId);
         Task SendMessage<T>(string userId, T message);
+        Task SendMessage(string chatId, string message);
     }
 }
