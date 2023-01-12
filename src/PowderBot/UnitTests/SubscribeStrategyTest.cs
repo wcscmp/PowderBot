@@ -22,7 +22,7 @@ namespace UnitTests
                 .Returns(Task.CompletedTask);
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
             await new SubscribeStrategy(new UserModel(userId),
-                                        new string[] { "subscribe", subscription.Uri, "10cm" },
+                                        new string[] { "/subscribe", subscription.Uri, "10cm" },
                                         subscriptionRepo)
                 .Process();
             subscriptionRepoMock.VerifyAll();
@@ -40,7 +40,7 @@ namespace UnitTests
                 .Returns(Task.CompletedTask);
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
             await new SubscribeStrategy(new UserModel(userId),
-                                        new string[] { "subscribe", subscription.Uri, "10inch" },
+                                        new string[] { "/subscribe", subscription.Uri, "10inch" },
                                         subscriptionRepo)
                 .Process();
             subscriptionRepoMock.VerifyAll();
@@ -54,7 +54,7 @@ namespace UnitTests
                                                      "http://www.snow-forecast.com/resorts/Alta");
             var subscriptionRepo = new SubscriptionRepository(null);
             await new SubscribeStrategy(new UserModel(userId),
-                                        new string[] { "subscribe", subscription.Uri, "10asd" },
+                                        new string[] { "/subscribe", subscription.Uri, "10asd" },
                                         subscriptionRepo)
                 .Process();
         }

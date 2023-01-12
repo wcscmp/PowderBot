@@ -61,10 +61,12 @@ namespace BusinessLogic
             var units = _words.Length > 3 ? _words[3] : m.Groups[2].Captures[0].Value;
             switch (units)
             {
-            case "/inch":
-                return (snowfall.InchToCm(), null);
-            case "/cm":
-                return (snowfall, null);
+                case "inch":
+                case "/inch":
+                    return (snowfall.InchToCm(), null);
+                case "cm":
+                case "/cm":
+                    return (snowfall, null);
             }
             var baseText = $"{string.Join(" ", _words.Take(2))} {snowfall}";
             return (0, new ListMessage("Choose measurement units", baseText,
