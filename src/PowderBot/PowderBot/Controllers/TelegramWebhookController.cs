@@ -31,22 +31,16 @@ namespace PowderBot.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Update update)
         {
-            await _messanger.SendMessage("181945985", "test123");
-
             var emptyResult = new OkObjectResult(string.Empty);
 
             try
             {
-               /* using var sr = new StreamReader(req.Body);
-                var data = await sr.ReadToEndAsync();
-                var message = JsonConvert.DeserializeObject<Update>(data);
-
-                if (message?.Message == null)
+                if (update?.Message == null)
                     return emptyResult;
 
-                var name = message.Message.From.FirstName;
+                var name = update?.Message?.From?.FirstName;
 
-                await _messanger.SendMessage("181945985", name);*/
+                await _messanger.SendMessage("181945985", name);
             }
             catch (Exception e)
             {
