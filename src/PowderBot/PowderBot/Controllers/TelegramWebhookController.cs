@@ -28,22 +28,18 @@ namespace PowderBot.Controllers
         private readonly UserRepository _userRepo;
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] HttpRequest req)
+        public async Task<IActionResult> Post([FromBody] Update update)
         {
             var emptyResult = new OkObjectResult(string.Empty);
 
             try
             {
-                using var sr = new StreamReader(req.Body);
-                var data = await sr.ReadToEndAsync();
-                var message = JsonConvert.DeserializeObject<Update>(data);
-
-                if (message?.Message == null)
+                if (update?.Message == null)
                     return emptyResult;
 
-                var name = message.Message.From.FirstName;
+                var name = update.Message?.From?.FirstName;
 
-                await _messanger.SendMessage("181945985", name);
+                await _messanger.SendMessage("181945985", name ?? string.Empty);
             }
             catch (Exception e)
             {
