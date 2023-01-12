@@ -1,14 +1,7 @@
 ﻿using BusinessLogic;
-using Common;
 using Data;
-using Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using PowderBot.ApiTypes.Facebook;
-using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebClient;
 
 namespace PowderBot.Controllers

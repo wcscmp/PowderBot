@@ -1,25 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using BusinessLogic;
+using Data.Models;
+using Data;
+using WebClient;
 
-namespace PowderBot
+var builder = WebApplication.CreateBuilder(args);
+
+// Register services
+RegisterServices(builder.Services, builder.Configuration);
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            BuildWebHost(args).Run();
-        }
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
-    }
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+void RegisterServices(IServiceCollection services, IConfiguration configuration)
+{
+    // Add controllers
+    builder.Services.AddControllers();
+
+    // Use ApplicationInsights
+    services.AddApplicationInsightsTelemetry(configuration);
+
+    // Register configurations
+    services.Configure<StorageConfiguration>(configuration.GetSection("Storage"));
+    services.Configure<FacebookConfiguration>(configuration.GetSection("Facebook"));
+
+    // Solution services registration
+    services.AddSingleton<HttpClient, HttpClient>();
+    services.AddScoped<IGenericRepository<UserModel>, GenericRepository<UserModel>>();
+    services.AddScoped<IGenericRepository<SubscriptionModel>, GenericRepository<SubscriptionModel>>();
+    services.AddScoped<UserRepository, UserRepository>();
+    services.AddScoped<SubscriptionRepository, SubscriptionRepository>();
+    services.AddScoped<CommandFactory, CommandFactory>();
+    services.AddScoped<IMessanger, FacebookClient>();
+    services.AddScoped<ISnowForecastClient, SnowForecastClient>();
+    services.AddScoped<SnowfallChecker, SnowfallChecker>();
 }
