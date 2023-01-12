@@ -2,18 +2,17 @@
 using Data;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using PowderBot.ApiTypes.Facebook;
 using Telegram.Bot.Types;
 using WebClient;
 
 namespace PowderBot.Controllers
 {
     [Route("TelegramWebhook")]
-    public class WebhookController : Controller
+    public class TelegramWebhookController : Controller
     {
-        private readonly ILogger<WebhookController> _logger;
+        private readonly ILogger<TelegramWebhookController> _logger;
 
-        public WebhookController(ILogger<WebhookController> logger,
+        public TelegramWebhookController(ILogger<TelegramWebhookController> logger,
             IMessanger messanger,
             CommandFactory commandFactory,
             UserRepository userRepo)
@@ -28,6 +27,7 @@ namespace PowderBot.Controllers
         private readonly CommandFactory _commandFactory;
         private readonly UserRepository _userRepo;
 
+        [HttpPost]
         public async Task<IActionResult> Post([FromBody] HttpRequest req)
         {
             var emptyResult = new OkObjectResult(string.Empty);

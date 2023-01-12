@@ -26,7 +26,7 @@ namespace PowderBot.Controllers
         private readonly SubscriptionRepository _subscriptionRepo;
 
         [HttpPost]
-        async public Task<IActionResult> Post()
+        public async Task<IActionResult> Post()
         {
             var now = DateTimeOffset.UtcNow;
             var subscriptions = await _subscriptionRepo.GetAll();
