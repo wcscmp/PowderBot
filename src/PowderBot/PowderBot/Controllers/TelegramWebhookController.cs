@@ -2,6 +2,7 @@
 using Data;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Xml.Linq;
 using Telegram.Bot.Types;
 using WebClient;
 
@@ -28,18 +29,24 @@ namespace PowderBot.Controllers
         private readonly UserRepository _userRepo;
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] Update update)
+        public async Task<IActionResult> Post([FromBody] HttpRequest req)
         {
+            await _messanger.SendMessage("181945985", "test123");
+
             var emptyResult = new OkObjectResult(string.Empty);
 
             try
             {
-                if (update?.Message == null)
+                using var sr = new StreamReader(req.Body);
+                var data = await sr.ReadToEndAsync();
+                var message = JsonConvert.DeserializeObject<Update>(data);
+
+                if (message?.Message == null)
                     return emptyResult;
 
-                var name = update.Message?.From?.FirstName;
+                var name = message.Message.From.FirstName;
 
-                await _messanger.SendMessage("181945985", name ?? string.Empty);
+                await _messanger.SendMessage("181945985", name);
             }
             catch (Exception e)
             {
