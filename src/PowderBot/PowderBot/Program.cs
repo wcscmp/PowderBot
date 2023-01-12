@@ -30,7 +30,7 @@ app.Run();
 void RegisterServices(IServiceCollection services, IConfiguration configuration)
 {
     // Add controllers
-    builder.Services.AddControllers();
+    builder.Services.AddControllers().AddNewtonsoftJson();
 
     // Use ApplicationInsights
     services.AddApplicationInsightsTelemetry(configuration);
