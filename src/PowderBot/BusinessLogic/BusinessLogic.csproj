@@ -1,14 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <ProjectReference Include="..\ApiTypes\ApiTypes.csproj" />
-    <ProjectReference Include="..\Data\Data.csproj" />
-    <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\WebClient\WebClient.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ApiTypes\ApiTypes.csproj" />
+		<ProjectReference Include="..\Data\Data.csproj" />
+		<ProjectReference Include="..\Common\Common.csproj" />
+		<ProjectReference Include="..\WebClient\WebClient.csproj" />
+	</ItemGroup>
 
 </Project>
