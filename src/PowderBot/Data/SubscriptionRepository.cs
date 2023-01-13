@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Data
 {
     public class SubscriptionRepository
@@ -12,11 +7,6 @@ namespace Data
         public SubscriptionRepository(IGenericRepository<Models.SubscriptionModel> repo)
         {
             _repo = repo;
-        }
-
-        public Task<Models.SubscriptionModel> Get(string userId, string uri)
-        {
-            return _repo.Get(new Models.SubscriptionModel(userId, uri).RowKey);
         }
 
         public Task<bool> Delete(string userId, string uri)

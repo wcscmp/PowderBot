@@ -1,10 +1,3 @@
-using HtmlAgilityPack;
-using HtmlAgilityPack.CssSelectors.NetCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-
 namespace WebClient
 {
     public class SnowForecastClient : ISnowForecastClient

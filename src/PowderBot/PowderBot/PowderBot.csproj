@@ -22,7 +22,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\ApiTypes\ApiTypes.csproj" />
 		<ProjectReference Include="..\Data\Data.csproj" />
 		<ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
 		<ProjectReference Include="..\WebClient\WebClient.csproj" />

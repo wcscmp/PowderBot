@@ -37,7 +37,6 @@ void RegisterServices(IServiceCollection services, IConfiguration configuration)
 
     // Register configurations
     services.Configure<StorageConfiguration>(configuration.GetSection("Storage"));
-    services.Configure<FacebookConfiguration>(configuration.GetSection("Facebook"));
     services.Configure<TelegramConfiguration>(configuration.GetSection("Telegram"));
 
     // Solution services registration

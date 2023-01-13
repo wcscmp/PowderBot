@@ -18,7 +18,6 @@
 		<ProjectReference Include="..\Common\Common.csproj" />
 		<ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
 		<ProjectReference Include="..\WebClient\WebClient.csproj" />
-		<ProjectReference Include="..\ApiTypes\ApiTypes.csproj" />
 	</ItemGroup>
 
 </Project>

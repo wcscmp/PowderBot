@@ -41,11 +41,6 @@ namespace WebClient
             }
         }
 
-        public Task SendMessage<T>(string userId, T message)
-        {
-            throw new NotImplementedException();
-        }
-
         string RemoveMarkdownChars(string input)
         {
             return input

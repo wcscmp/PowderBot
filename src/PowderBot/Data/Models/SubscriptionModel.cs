@@ -10,12 +10,13 @@ namespace Data.Models
         {
         }
 
-        public SubscriptionModel(string userId, string uri)
+        public SubscriptionModel(string chatId, string uri, string userId)
         {
             Uri = uri;
-            UserId = userId;
+            ChatId = chatId;
             PartitionKey = DefaultPartition;
-            RowKey = userId + GetResortName();
+            RowKey = chatId + GetResortName();
+            UserId = userId;
         }
 
         public static bool IsValidUri(string uri)
@@ -37,8 +38,9 @@ namespace Data.Models
             return updateTimeInUsersTimeZone.Date == now.Date;
         }
 
-        public string UserId { get; set; }
+        public string ChatId { get; set; }
         public string Uri { get; set; }
         public int Snowfall { get; set; }
+        public string UserId { get; set; }
     }
 }

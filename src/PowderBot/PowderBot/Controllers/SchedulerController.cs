@@ -32,21 +32,24 @@ namespace PowderBot.Controllers
             var subscriptions = await _subscriptionRepo.GetAll();
             var users = await _userRepo.GetUsersWhoCanBeNotified(now);
             var subscriptionsForUsers = subscriptions
-                .Join(users, s => s.UserId, u => u.Id, (s, u) => (u, s))
+                .Join(users, s => s.ChatId, u => u.Id, (s, u) => (u, s))
                 .Where(joined => !joined.Item2.UpdatedToday(joined.Item1, now))
                 .Select(joined => joined.Item2);
             var snowfall = await _snowfallChecker.Check(subscriptionsForUsers);
-            var notifyTasks = snowfall.Select(s => Notify(s.UserId, s.Subscriptions));
+            var notifyTasks = snowfall.Select(s => Notify(s.Subscriptions));
             var saveTasks = snowfall
                 .SelectMany(s => _subscriptionRepo.CreateSaveTasks(s.Subscriptions));
             await Task.WhenAll(notifyTasks.Concat(saveTasks));
             return Ok();
         }
 
-        private async Task Notify(string userId, IEnumerable<SubscriptionModel> subs)
+        private async Task Notify(IEnumerable<SubscriptionModel> subs)
         {
-            await new MultiTextMessage(subs.Select(s => s.Uri), "Check this out:")
-                .SendMessage(userId, _messanger);
+            foreach (var subGroup in subs.GroupBy(s => s.ChatId))
+            {
+                await new MultiTextMessage(subGroup.Select(s => s.Uri), "Check this out:")
+                    .SendMessage(subGroup.Key, _messanger);
+            }
         }
     }
 }

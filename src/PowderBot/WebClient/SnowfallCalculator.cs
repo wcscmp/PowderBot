@@ -1,8 +1,6 @@
 using Common.Converters;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
-using System;
-using System.Linq;
 
 namespace WebClient
 {

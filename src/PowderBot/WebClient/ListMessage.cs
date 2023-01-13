@@ -1,11 +1,3 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using PowderBot.ApiTypes.Facebook;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace WebClient
 {
     public class ListMessage : IMessage
@@ -21,18 +13,15 @@ namespace WebClient
             _elements = elements;
         }
 
-        public async Task SendMessage(string userId, IMessanger client)
+        public async Task SendMessage(string chatId, IMessanger client)
         {
-            await client.SendMessage(userId,
-                new QuickReply
-                {
-                    Text = _header,
-                    QuickReplies = _elements.Select(e => new QuickReplyBody
-                    {
-                        Title = e,
-                        Payload = _baseText + e
-                    }).ToArray()
-                });
+            await client.SendMessage(chatId, _header);
+            await client.SendMessage(chatId, _baseText);
+
+            foreach (var element in _elements)
+            {
+                await client.SendMessage(chatId, element);
+            }
         }
     }
 }
