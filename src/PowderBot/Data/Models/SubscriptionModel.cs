@@ -1,6 +1,4 @@
 using Microsoft.WindowsAzure.Storage.Table;
-using System;
-using System.Linq;
 
 namespace Data.Models
 {
@@ -8,16 +6,16 @@ namespace Data.Models
     {
         private const string DefaultPartition = "";
 
+        public SubscriptionModel()
+        {
+        }
+
         public SubscriptionModel(string userId, string uri)
         {
             Uri = uri;
             UserId = userId;
             PartitionKey = DefaultPartition;
             RowKey = userId + GetResortName();
-        }
-
-        public SubscriptionModel()
-        {
         }
 
         public static bool IsValidUri(string uri)

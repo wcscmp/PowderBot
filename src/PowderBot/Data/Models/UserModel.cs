@@ -1,5 +1,4 @@
 ﻿using Microsoft.WindowsAzure.Storage.Table;
-using System;
 
 namespace Data.Models
 {
@@ -7,16 +6,14 @@ namespace Data.Models
     {
         private const string DefaultPartition = "";
 
+        public UserModel()
+        {
+        }
+
         public UserModel(string id)
         {
             PartitionKey = DefaultPartition;
             RowKey = id;
-
-            Id = id;
-        }
-
-        public UserModel()
-        {
         }
 
         public bool CanBeNotified(DateTimeOffset now)
@@ -27,10 +24,12 @@ namespace Data.Models
             return notifyAfter <= userTime && userTime < notifyBefore;
         }
 
-        public string Id { get; set; }
-        public int NotifyAfter { get; set; }
-        public int NotifyBefore { get; set; }
+        public string Firstname { get; set; }
+        public string Lastname { get; set; }
+        public string Username { get; set; }
         public double Gmt { get; set; }
         public string LastCommand { get; set; }
+
+        public string Id => RowKey;
     }
 }

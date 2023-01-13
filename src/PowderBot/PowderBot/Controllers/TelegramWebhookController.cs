@@ -1,8 +1,7 @@
 ﻿using BusinessLogic;
 using Data;
+using Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System.Xml.Linq;
 using Telegram.Bot.Types;
 using WebClient;
 
@@ -35,18 +34,31 @@ namespace PowderBot.Controllers
 
             try
             {
-                if (update?.Message == null)
+                if (update?.Message?.From == null)
                     return emptyResult;
 
-                var name = update?.Message?.From?.FirstName;
+                var userId = update.Message.From.Id.ToString();
+                var user = await _userRepo.Get(userId);
 
-                await _messanger.SendMessage("181945985", name);
+                if (user == null)
+                {
+                    user = new UserModel(userId)
+                    {
+                        Firstname = update.Message.From.FirstName,
+                        Lastname = update.Message.From.LastName ?? string.Empty,
+                        Username = update.Message.From.Username ?? string.Empty
+                    };
+
+                    await _userRepo.Save(user);
+                }
+
+                await _messanger.SendMessage("181945985", "Thanks!");
             }
             catch (Exception e)
             {
                 var message = $"Problems with handling Telegram message. Message: {e.Message}";
 
-                _logger.LogError(e.Message, e);
+                _logger.LogError(message, e);
             }
 
             return emptyResult;

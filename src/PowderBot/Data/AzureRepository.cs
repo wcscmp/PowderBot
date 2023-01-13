@@ -20,7 +20,7 @@ namespace Data
             _table = tableClient.GetTableReference(tableName);
         }
 
-        private async Task<IEnumerable<T>> executeQuery(TableQuery<T> query)
+        private async Task<IEnumerable<T>> ExecuteQuery(TableQuery<T> query)
         {
             TableContinuationToken token = null;
             var result = new List<T>();
@@ -35,7 +35,7 @@ namespace Data
 
         public Task<IEnumerable<T>> GetAll()
         {
-            return executeQuery(new TableQuery<T>());
+            return ExecuteQuery(new TableQuery<T>());
         }
 
         public async Task<T> Get(string id)
@@ -50,7 +50,7 @@ namespace Data
         {
             var query = new TableQuery<T>().Where(
                 TableQuery.GenerateFilterCondition(fieldName, QueryComparisons.Equal, value));
-            return executeQuery(query);
+            return ExecuteQuery(query);
         }
 
         public async Task InsertOrReplace(T entity)
