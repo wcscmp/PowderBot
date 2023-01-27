@@ -16,7 +16,7 @@ namespace BusinessLogic
             _snowForecastClient = snowForecastClient;
         }
 
-        public ICommandStrategy Create(UserModel user, string message)
+        public ICommandStrategy Create(string chatId, UserModel user, string message)
         {
             var lastCommand = user.LastCommand;
             user.LastCommand = null;
@@ -28,14 +28,14 @@ namespace BusinessLogic
             case "/check":
                 return new CheckStrategy(user, _subscriptionRepo, _snowForecastClient);
             case "/subscribe":
-                return new SubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
+                return new SubscribeStrategy(chatId, user, words.ToArray(), _subscriptionRepo);
             case "/unsubscribe":
-                return new UnsubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
+                return new UnsubscribeStrategy(chatId, user, words.ToArray(), _subscriptionRepo);
             case "/list":
                 return new ListStrategy(user, _subscriptionRepo);
             }
             return lastCommand != null
-                ? Create(user, $"{lastCommand} {message}")
+                ? Create(chatId, user, $"{lastCommand} {message}")
                 : new UsageStrategy(user);
         }
     }

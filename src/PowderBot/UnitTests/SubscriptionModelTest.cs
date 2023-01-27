@@ -11,8 +11,10 @@ namespace UnitTests
         [DataRow("http://www.snow-forecast.com/resorts/Alta/6day/mid", "Alta")]
         public void RowKeyIsCalculatedFromUserIdAndResort(string uri, string resort)
         {
+            const string chatId = "13";
             const string userId = "42";
-            Assert.AreEqual(userId + resort, new SubscriptionModel(userId, uri).RowKey);
+
+            Assert.AreEqual(chatId + resort, new SubscriptionModel(chatId, uri, userId).RowKey);
         }
 
         [DataTestMethod]

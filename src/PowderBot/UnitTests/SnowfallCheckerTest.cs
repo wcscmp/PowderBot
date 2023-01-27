@@ -11,7 +11,7 @@ namespace UnitTests
     {
         private readonly UserModel _user = new UserModel("42");
         private readonly SubscriptionModel _subscription
-            = new SubscriptionModel("42", "http://www.snow-forecast.com/resorts/Alta/6day/mid")
+            = new SubscriptionModel("13", "http://www.snow-forecast.com/resorts/Alta/6day/mid", "42")
             {
                 Snowfall = 5
             };

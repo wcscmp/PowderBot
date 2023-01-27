@@ -34,10 +34,14 @@ namespace PowderBot.Controllers
 
             try
             {
-                if (update?.Message?.From == null || string.IsNullOrWhiteSpace(update?.Message?.Text))
+                if (update?.Message?.From == null ||
+                    update?.Message?.Chat == null ||
+                    string.IsNullOrWhiteSpace(update?.Message?.Text))
                     return emptyResult;
 
                 var userId = update.Message.From.Id.ToString();
+                var chatId = update.Message.Chat.Id.ToString();
+
                 var user = await _userRepo.Get(userId);
 
                 user = new UserModel(userId)
@@ -50,10 +54,10 @@ namespace PowderBot.Controllers
                 await _userRepo.Save(user);
 
                 var (response, updatedUser) = await _commandFactory
-                    .Create(user, update.Message.Text)
+                    .Create(chatId, user, update.Message.Text)
                     .Process();
 
-                await response.SendMessage(updatedUser.Id, _messanger);
+                await response.SendMessage(chatId, _messanger);
 
                 updatedUser.Gmt = await _messanger.QueryUserTimezone(updatedUser.Id);
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Common.Converters;
 using HtmlAgilityPack;
 using HtmlAgilityPack.CssSelectors.NetCore;
@@ -23,7 +24,7 @@ namespace WebClient
 
         private static float parse(HtmlNode node)
         {
-            if (float.TryParse(node.InnerText, out float value))
+            if (float.TryParse(node.InnerText, CultureInfo.InvariantCulture, out float value))
             {
                 return value;
             }

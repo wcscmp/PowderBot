@@ -1,6 +1,7 @@
 using Common.Converters;
 using Data;
 using Data.Models;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using WebClient;
 
@@ -8,14 +9,16 @@ namespace BusinessLogic
 {
     public class SubscribeStrategy : ICommandStrategy
     {
+        private readonly string _chatId;
         private readonly UserModel _user;
         private readonly string[] _words;
         private readonly SubscriptionRepository _repo;
         private static readonly Regex _snowfallRe
             = new Regex(@"^(\d+)([a-z]*)?$", RegexOptions.IgnoreCase);
 
-        public SubscribeStrategy(UserModel user, string[] words, SubscriptionRepository repo)
+        public SubscribeStrategy(string chatId, UserModel user, string[] words, SubscriptionRepository repo)
         {
+            _chatId = chatId;
             _user = user;
             _words = words;
             _repo = repo;
@@ -28,7 +31,7 @@ namespace BusinessLogic
             {
                 return (errorMessage, _user);
             }
-            await _repo.Save(new SubscriptionModel(_user.Id, _words[1])
+            await _repo.Save(new SubscriptionModel(_chatId, _words[1], _user.Id)
                              {
                                  Snowfall = snowfall
                              });
@@ -57,7 +60,7 @@ namespace BusinessLogic
                 _user.LastCommand = string.Join(" ", _words.Take(2));
                 return (0, new TextMessage("Please enter a number for the threshold"));
             }
-            var snowfall = int.Parse(m.Groups[1].Captures[0].Value);
+            var snowfall = int.Parse(m.Groups[1].Captures[0].Value, CultureInfo.InvariantCulture);
             var units = _words.Length > 3 ? _words[3] : m.Groups[2].Captures[0].Value;
             switch (units)
             {
