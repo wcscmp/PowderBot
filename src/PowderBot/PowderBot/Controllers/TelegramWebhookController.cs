@@ -42,14 +42,10 @@ namespace PowderBot.Controllers
                 var userId = update.Message.From.Id.ToString();
                 var chatId = update.Message.Chat.Id.ToString();
 
-                var user = await _userRepo.Get(userId);
-
-                user = new UserModel(userId)
-                {
-                    Firstname = update.Message.From.FirstName,
-                    Lastname = update.Message.From.LastName ?? string.Empty,
-                    Username = update.Message.From.Username ?? string.Empty
-                };
+                var user = (await _userRepo.Get(userId)) ?? new UserModel(userId);
+                user.Firstname = update.Message.From.FirstName;
+                user.Lastname = update.Message.From.LastName ?? string.Empty;
+                user.Username = update.Message.From.Username ?? string.Empty;
 
                 await _userRepo.Save(user);
 
