@@ -14,7 +14,7 @@ namespace BusinessLogic
         private readonly string[] _words;
         private readonly SubscriptionRepository _repo;
         private static readonly Regex _snowfallRe
-            = new Regex(@"^(\d+)([a-z]*)?$", RegexOptions.IgnoreCase);
+            = new Regex(@"^(\d+)([a-z\/]*)?$", RegexOptions.IgnoreCase);
 
         public SubscribeStrategy(string chatId, UserModel user, string[] words, SubscriptionRepository repo)
         {
@@ -73,7 +73,7 @@ namespace BusinessLogic
             }
             var baseText = $"{string.Join(" ", _words.Take(2))} {snowfall}";
             return (0, new ListMessage("Choose measurement units", baseText,
-                                       new string[] { "/cm", "/inch" }));
+                                       new[] { "/cm", "/inch" }));
         }
 
         public const string Usage = "/subscribe - follow resort's forecast";
