@@ -27,4 +27,10 @@
 		<ProjectReference Include="..\WebClient\WebClient.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <None Remove="App_Data\keep" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Content Include="App_Data\keep" />
+	</ItemGroup>
 </Project>
