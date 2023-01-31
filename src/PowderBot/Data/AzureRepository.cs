@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 
@@ -20,7 +18,7 @@ namespace Data
             _table = tableClient.GetTableReference(tableName);
         }
 
-        private async Task<IEnumerable<T>> executeQuery(TableQuery<T> query)
+        private async Task<IEnumerable<T>> ExecuteQuery(TableQuery<T> query)
         {
             TableContinuationToken token = null;
             var result = new List<T>();
@@ -35,7 +33,7 @@ namespace Data
 
         public Task<IEnumerable<T>> GetAll()
         {
-            return executeQuery(new TableQuery<T>());
+            return ExecuteQuery(new TableQuery<T>());
         }
 
         public async Task<T> Get(string id)
@@ -50,7 +48,7 @@ namespace Data
         {
             var query = new TableQuery<T>().Where(
                 TableQuery.GenerateFilterCondition(fieldName, QueryComparisons.Equal, value));
-            return executeQuery(query);
+            return ExecuteQuery(query);
         }
 
         public async Task InsertOrReplace(T entity)

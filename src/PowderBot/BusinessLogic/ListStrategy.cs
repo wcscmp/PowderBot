@@ -1,8 +1,5 @@
 using Data;
 using Data.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using WebClient;
 
 namespace BusinessLogic
@@ -28,6 +25,6 @@ namespace BusinessLogic
             return (new MultiTextMessage(subscriptionsByUser.Select(s => s.Uri)), _user);
         }
 
-        public const string Usage = "ls/list - show your subscriptions";
+        public const string Usage = "/list - show your subscriptions";
     }
 }

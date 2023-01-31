@@ -1,7 +1,6 @@
 using BusinessLogic;
 using Data;
 using Data.Models;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -13,17 +12,19 @@ namespace UnitTests
         [TestMethod]
         public async Task SnowfallMayBeSpecifiedInCm()
         {
+            const string chatId = "13";
             const string userId = "42";
-            var subscription = new SubscriptionModel(userId,
-                                                     "http://www.snow-forecast.com/resorts/Alta");
+            
+            var subscription = new SubscriptionModel(chatId, "http://www.snow-forecast.com/resorts/Alta", userId);
             var subscriptionRepoMock = new Mock<IGenericRepository<SubscriptionModel>>();
             subscriptionRepoMock
                 .Setup(mock => mock.InsertOrReplace(It.IsAny<SubscriptionModel>()))
                 .Returns(Task.CompletedTask);
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
-            await new SubscribeStrategy(new UserModel(userId),
-                                        new string[] { "subscribe", subscription.Uri, "10cm" },
-                                        subscriptionRepo)
+            await new SubscribeStrategy(chatId,
+                new UserModel(userId),
+                new string[] { "/subscribe", subscription.Uri, "10", "/cm" },
+                subscriptionRepo)
                 .Process();
             subscriptionRepoMock.VerifyAll();
         }
@@ -31,17 +32,19 @@ namespace UnitTests
         [TestMethod]
         public async Task SnowfallMayBeSpecifiedInInches()
         {
+            const string chatId = "13";
             const string userId = "42";
-            var subscription = new SubscriptionModel(userId,
-                                                     "http://www.snow-forecast.com/resorts/Alta");
+
+            var subscription = new SubscriptionModel(chatId, "http://www.snow-forecast.com/resorts/Alta", userId);
             var subscriptionRepoMock = new Mock<IGenericRepository<SubscriptionModel>>();
             subscriptionRepoMock
                 .Setup(mock => mock.InsertOrReplace(It.IsAny<SubscriptionModel>()))
                 .Returns(Task.CompletedTask);
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
-            await new SubscribeStrategy(new UserModel(userId),
-                                        new string[] { "subscribe", subscription.Uri, "10inch" },
-                                        subscriptionRepo)
+            await new SubscribeStrategy(chatId,
+                new UserModel(userId),
+                new string[] { "/subscribe", subscription.Uri, "10", "/inch" },
+                subscriptionRepo)
                 .Process();
             subscriptionRepoMock.VerifyAll();
         }
@@ -49,13 +52,15 @@ namespace UnitTests
         [TestMethod]
         public async Task SnowfallMayNotBeSpecifiedInInvalidUnits()
         {
+            const string chatId = "13";
             const string userId = "42";
-            var subscription = new SubscriptionModel(userId,
-                                                     "http://www.snow-forecast.com/resorts/Alta");
+
+            var subscription = new SubscriptionModel(chatId, "http://www.snow-forecast.com/resorts/Alta", userId);
             var subscriptionRepo = new SubscriptionRepository(null);
-            await new SubscribeStrategy(new UserModel(userId),
-                                        new string[] { "subscribe", subscription.Uri, "10asd" },
-                                        subscriptionRepo)
+            await new SubscribeStrategy(chatId,
+                new UserModel(userId),
+                new string[] { "/subscribe", subscription.Uri, "10asd" },
+                subscriptionRepo)
                 .Process();
         }
     }

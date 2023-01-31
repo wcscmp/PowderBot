@@ -1,9 +1,3 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using PowderBot.ApiTypes.Facebook;
-using System;
-using System.Threading.Tasks;
-
 namespace WebClient
 {
     public class TextMessage : IMessage
@@ -15,13 +9,7 @@ namespace WebClient
             _text = text;
         }
 
-        public async Task SendMessage(string userId, IMessanger client)
-        {
-            await client.SendMessage(userId,
-                new TextData
-                {
-                    Text = _text
-                });
-        }
+        public Task SendMessage(string chatId, IMessanger client) =>
+            client.SendMessage(chatId, _text);
     }
 }

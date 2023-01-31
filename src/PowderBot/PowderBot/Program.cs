@@ -10,6 +10,10 @@ RegisterServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
+// Configure logging to files
+var loggerFactory = app.Services.GetService<ILoggerFactory>();
+loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -30,14 +34,14 @@ app.Run();
 void RegisterServices(IServiceCollection services, IConfiguration configuration)
 {
     // Add controllers
-    builder.Services.AddControllers();
+    builder.Services.AddControllers().AddNewtonsoftJson();
 
     // Use ApplicationInsights
     services.AddApplicationInsightsTelemetry(configuration);
 
     // Register configurations
     services.Configure<StorageConfiguration>(configuration.GetSection("Storage"));
-    services.Configure<FacebookConfiguration>(configuration.GetSection("Facebook"));
+    services.Configure<TelegramConfiguration>(configuration.GetSection("Telegram"));
 
     // Solution services registration
     services.AddSingleton<HttpClient, HttpClient>();
@@ -46,7 +50,7 @@ void RegisterServices(IServiceCollection services, IConfiguration configuration)
     services.AddScoped<UserRepository, UserRepository>();
     services.AddScoped<SubscriptionRepository, SubscriptionRepository>();
     services.AddScoped<CommandFactory, CommandFactory>();
-    services.AddScoped<IMessanger, FacebookClient>();
+    services.AddScoped<IMessanger, TelegramClient>();
     services.AddScoped<ISnowForecastClient, SnowForecastClient>();
     services.AddScoped<SnowfallChecker, SnowfallChecker>();
 }

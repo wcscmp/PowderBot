@@ -1,7 +1,3 @@
-using PowderBot.ApiTypes.Facebook;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using WebClient;
 
 namespace UnitTests
@@ -15,19 +11,11 @@ namespace UnitTests
             return Task.FromResult(0.0);
         }
 
-        public Task SendMessage<T>(string userId, T message)
+        public Task SendMessage(string chatId, string message)
         {
-            _messages.Add(matchMessage(message));
-            return Task.CompletedTask;
-        }
+            _messages.Add(message);
 
-        private string matchMessage(object message)
-        {
-            if (message is TextData m)
-            {
-                return m.Text;
-            }
-            return string.Empty;
+            return Task.CompletedTask;
         }
 
         public string Text => string.Join("\n", _messages);

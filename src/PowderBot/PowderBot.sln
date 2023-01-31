@@ -1,10 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PowderBot", "PowderBot\PowderBot.csproj", "{E9F2EC01-B771-489D-B677-5AB0F6C0DABE}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiTypes", "ApiTypes\ApiTypes.csproj", "{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{1A61CF17-9731-450B-9362-290914860C4A}"
 EndProject
@@ -38,18 +36,6 @@ Global
 		{E9F2EC01-B771-489D-B677-5AB0F6C0DABE}.Release|x64.Build.0 = Release|Any CPU
 		{E9F2EC01-B771-489D-B677-5AB0F6C0DABE}.Release|x86.ActiveCfg = Release|Any CPU
 		{E9F2EC01-B771-489D-B677-5AB0F6C0DABE}.Release|x86.Build.0 = Release|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Debug|x64.Build.0 = Debug|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Debug|x86.Build.0 = Debug|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Release|x64.ActiveCfg = Release|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Release|x64.Build.0 = Release|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Release|x86.ActiveCfg = Release|Any CPU
-		{E2A92BC8-8AAC-4F12-AF8C-C63F8A8D5953}.Release|x86.Build.0 = Release|Any CPU
 		{1A61CF17-9731-450B-9362-290914860C4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A61CF17-9731-450B-9362-290914860C4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A61CF17-9731-450B-9362-290914860C4A}.Debug|x64.ActiveCfg = Debug|Any CPU

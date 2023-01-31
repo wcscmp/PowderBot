@@ -1,7 +1,5 @@
 using Microsoft.Extensions.Options;
 using Microsoft.WindowsAzure.Storage.Table;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Data
 {

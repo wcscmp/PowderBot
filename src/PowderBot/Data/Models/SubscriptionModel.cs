@@ -1,6 +1,4 @@
 using Microsoft.WindowsAzure.Storage.Table;
-using System;
-using System.Linq;
 
 namespace Data.Models
 {
@@ -8,16 +6,17 @@ namespace Data.Models
     {
         private const string DefaultPartition = "";
 
-        public SubscriptionModel(string userId, string uri)
-        {
-            Uri = uri;
-            UserId = userId;
-            PartitionKey = DefaultPartition;
-            RowKey = userId + GetResortName();
-        }
-
         public SubscriptionModel()
         {
+        }
+
+        public SubscriptionModel(string chatId, string uri, string userId)
+        {
+            Uri = uri;
+            ChatId = chatId;
+            PartitionKey = DefaultPartition;
+            RowKey = chatId + GetResortName();
+            UserId = userId;
         }
 
         public static bool IsValidUri(string uri)
@@ -30,7 +29,8 @@ namespace Data.Models
             return Uri.Split(new Char[]{'/'})
                    .SkipWhile(str => str != "resorts")
                    .Skip(1)
-                   .First();
+                   .First()
+                   .Replace('-', '_');
         }
 
         public bool UpdatedToday(UserModel user, DateTimeOffset now)
@@ -39,8 +39,9 @@ namespace Data.Models
             return updateTimeInUsersTimeZone.Date == now.Date;
         }
 
-        public string UserId { get; set; }
+        public string ChatId { get; set; }
         public string Uri { get; set; }
         public int Snowfall { get; set; }
+        public string UserId { get; set; }
     }
 }

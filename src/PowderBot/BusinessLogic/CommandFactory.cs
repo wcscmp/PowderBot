@@ -1,8 +1,5 @@
 using Data;
 using Data.Models;
-using System;
-using System.Linq;
-using PowderBot.ApiTypes.Facebook;
 using WebClient;
 
 namespace BusinessLogic
@@ -19,29 +16,27 @@ namespace BusinessLogic
             _snowForecastClient = snowForecastClient;
         }
 
-        public ICommandStrategy Create(UserModel user, string message)
+        public ICommandStrategy Create(string chatId, UserModel user, string message)
         {
             var lastCommand = user.LastCommand;
             user.LastCommand = null;
             var words = message
-                .Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)
-                .Select(s => s.ToLowerInvariant());
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim().ToLowerInvariant());
             switch (words.First())
             {
-            case "check":
-                return new CheckStrategy(user, _subscriptionRepo, _snowForecastClient);
-            case "sb":
-            case "subscribe":
-                return new SubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
-            case "unsb":
-            case "unsubscribe":
-                return new UnsubscribeStrategy(user, words.ToArray(), _subscriptionRepo);
-            case "ls":
-            case "list":
-                return new ListStrategy(user, _subscriptionRepo);
+                case "/check":
+                    return new CheckStrategy(user, _subscriptionRepo, _snowForecastClient);
+                case "/subscribe":
+                    return new SubscribeStrategy(chatId, user, words.ToArray(), _subscriptionRepo);
+                case "/unsubscribe":
+                    return new UnsubscribeStrategy(chatId, user, words.ToArray(), _subscriptionRepo);
+                case "/list":
+                    return new ListStrategy(user, _subscriptionRepo);
             }
+
             return lastCommand != null
-                ? Create(user, $"{lastCommand} {message}")
+                ? Create(chatId, user, $"{lastCommand} {message}")
                 : new UsageStrategy(user);
         }
     }

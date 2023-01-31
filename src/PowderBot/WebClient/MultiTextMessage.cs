@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace WebClient
 {
     public class MultiTextMessage : IMessage
@@ -16,13 +11,17 @@ namespace WebClient
             _texts = texts.Select(t => new TextMessage(t));
         }
 
-        public async Task SendMessage(string userId, IMessanger client)
+        public async Task SendMessage(string chatId, IMessanger client)
         {
             if (_title != null)
             {
-                await _title.SendMessage(userId, client);
+                await _title.SendMessage(chatId, client);
             }
-            await Task.WhenAll(_texts.Select(t => t.SendMessage(userId, client)));
+
+            foreach (var text in _texts)
+            {
+                await text.SendMessage(chatId, client);
+            }
         }
     }
 }
