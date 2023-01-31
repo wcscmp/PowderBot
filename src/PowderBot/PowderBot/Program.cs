@@ -14,6 +14,10 @@ RegisterServices(builder.Services, builder.Configuration);
 
 var app = builder.Build();
 
+// Configure logging to files
+// var loggerFactory = app.Services.GetService<ILoggerFactory>();
+// loggerFactory.AddFile(builder.Configuration["Logging:LogFilePath"].ToString());
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
