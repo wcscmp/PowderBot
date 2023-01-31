@@ -23,7 +23,7 @@ namespace UnitTests
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
             await new SubscribeStrategy(chatId,
                 new UserModel(userId),
-                new string[] { "/subscribe", subscription.Uri, "10cm" },
+                new string[] { "/subscribe", subscription.Uri, "10", "/cm" },
                 subscriptionRepo)
                 .Process();
             subscriptionRepoMock.VerifyAll();
@@ -43,7 +43,7 @@ namespace UnitTests
             var subscriptionRepo = new SubscriptionRepository(subscriptionRepoMock.Object);
             await new SubscribeStrategy(chatId,
                 new UserModel(userId),
-                new string[] { "/subscribe", subscription.Uri, "10inch" },
+                new string[] { "/subscribe", subscription.Uri, "10", "/inch" },
                 subscriptionRepo)
                 .Process();
             subscriptionRepoMock.VerifyAll();
