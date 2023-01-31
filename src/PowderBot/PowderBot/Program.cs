@@ -5,6 +5,10 @@ using WebClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure logger
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 // Register services
 RegisterServices(builder.Services, builder.Configuration);
 
