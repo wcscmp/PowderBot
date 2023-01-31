@@ -29,7 +29,8 @@ namespace Data.Models
             return Uri.Split(new Char[]{'/'})
                    .SkipWhile(str => str != "resorts")
                    .Skip(1)
-                   .First();
+                   .First()
+                   .Replace('-', '_');
         }
 
         public bool UpdatedToday(UserModel user, DateTimeOffset now)
