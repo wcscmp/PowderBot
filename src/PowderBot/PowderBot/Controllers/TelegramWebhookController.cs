@@ -30,8 +30,6 @@ namespace PowderBot.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Update update)
         {
-            _logger.LogCritical("Log info TelegramWebhookController test");
-
             var emptyResult = new OkObjectResult(string.Empty);
 
             try
