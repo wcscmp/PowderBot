@@ -30,7 +30,7 @@ namespace Data.Models
                    .SkipWhile(str => str != "resorts")
                    .Skip(1)
                    .First()
-                   .Replace('-', '_');
+                   .Remove('-');
         }
 
         public bool UpdatedToday(UserModel user, DateTimeOffset now)
