@@ -9,6 +9,9 @@
 	<ItemGroup>
 		<Folder Include="wwwroot\" />
 	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="App_Data\" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
@@ -25,12 +28,5 @@
 		<ProjectReference Include="..\Data\Data.csproj" />
 		<ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
 		<ProjectReference Include="..\WebClient\WebClient.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="App_Data\keep" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Content Include="App_Data\keep" />
 	</ItemGroup>
 </Project>
