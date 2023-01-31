@@ -26,19 +26,23 @@ namespace BusinessLogic
                 var subscriptions = await _repo.GetByUser(_user.Id);
                 if (subscriptions.Any() && subscriptions.Count() <= 10)
                 {
-                    var resorts = (new string[] { "all" })
-                        .Concat(subscriptions.Select(s => s.GetResortName()));
-                    return (new ListMessage("What from?", "/unsubscribe", resorts), _user);
+                    var resorts = (new string[] { "/all" })
+                        .Concat(subscriptions.Select(s => $"/{s.GetResortName()}"));
+
+                    _user.LastCommand = "/unsubscribe";
+
+                    return (new MultiTextMessage(resorts, "What from?"), _user);
                 }
             }
             if (_words.Length != 2)
             {
                 _user.LastCommand = string.Join(" ", _words);
+
                 return (new TextMessage("Enter existing subscription link or all"), _user);
             }
-            if (_words[1] != "all")
+            if (_words[1] != "/all")
             {
-                bool deleted = await _repo.Delete(_chatId, _words[1], _user.Id);
+                bool deleted = await _repo.Delete(_chatId, _words[1].TrimStart('/'), _user.Id);
                 if (!deleted)
                 {
                     return (new TextMessage("Subscription not found"), _user);
