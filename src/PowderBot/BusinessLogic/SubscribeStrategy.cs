@@ -71,9 +71,9 @@ namespace BusinessLogic
                 case "/cm":
                     return (snowfall, null);
             }
-            var baseText = $"{string.Join(" ", _words.Take(2))} {snowfall}";
-            return (0, new ListMessage("Choose measurement units", baseText,
-                                       new[] { "/cm", "/inch" }));
+            _user.LastCommand = $"{string.Join(" ", _words.Take(2))} {snowfall}";
+
+            return (0, new MultiTextMessage(new[] { "/cm", "/inch" }, "Choose measurement units"));
         }
 
         public const string Usage = "/subscribe - follow resort's forecast";
