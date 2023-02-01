@@ -34,7 +34,7 @@ namespace UnitTests
             var now = new DateTimeOffset(2017, 10, 10, 16, 0, 0, new TimeSpan());
             var sub = new SubscriptionModel
             {
-                Timestamp = now
+                LastMessageSent = now
             };
             Assert.AreEqual(expected, sub.UpdatedToday(user, now));
         }

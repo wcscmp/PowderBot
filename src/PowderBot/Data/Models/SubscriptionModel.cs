@@ -35,7 +35,7 @@ namespace Data.Models
 
         public bool UpdatedToday(UserModel user, DateTimeOffset now)
         {
-            var updateTimeInUsersTimeZone = Timestamp.AddHours(user.Gmt);
+            var updateTimeInUsersTimeZone = LastMessageSent.AddHours(user.Gmt);
             return updateTimeInUsersTimeZone.Date == now.Date;
         }
 
@@ -43,5 +43,6 @@ namespace Data.Models
         public string Uri { get; set; }
         public int Snowfall { get; set; }
         public string UserId { get; set; }
+        public DateTimeOffset LastMessageSent { get; set; }
     }
 }
