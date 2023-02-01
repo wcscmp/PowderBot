@@ -17,6 +17,7 @@ namespace Data.Models
             PartitionKey = DefaultPartition;
             RowKey = chatId + GetResortName();
             UserId = userId;
+            LastMessageSent = DateTimeOffset.UtcNow;
         }
 
         public static bool IsValidUri(string uri)
