@@ -32,9 +32,10 @@ namespace BusinessLogic
                 return (errorMessage, _user);
             }
             await _repo.Save(new SubscriptionModel(_chatId, _words[1], _user.Id)
-                             {
-                                 Snowfall = snowfall
-                             });
+            {
+                Snowfall = snowfall,
+                LastMessageSent = DateTimeOffset.UtcNow
+            });
             return (new TextMessage("Subscribtion added"), _user);
         }
 
