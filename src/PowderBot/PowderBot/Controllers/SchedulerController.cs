@@ -31,15 +31,17 @@ namespace PowderBot.Controllers
             var now = DateTimeOffset.UtcNow;
             var subscriptions = await _subscriptionRepo.GetAll();
             var users = await _userRepo.GetUsersWhoCanBeNotified(now);
+
             var subscriptionsForUsers = subscriptions
                 .Join(users, s => s.ChatId, u => u.Id, (s, u) => (u, s))
                 .Where(joined => !joined.Item2.UpdatedToday(joined.Item1, now))
                 .Select(joined => joined.Item2);
+
             var snowfall = await _snowfallChecker.Check(subscriptionsForUsers);
-            var notifyTasks = snowfall.Select(s => Notify(s.Subscriptions));
-            var saveTasks = snowfall
-                .SelectMany(s => _subscriptionRepo.CreateSaveTasks(s.Subscriptions));
-            await Task.WhenAll(notifyTasks.Concat(saveTasks));
+
+            await Notify(snowfall);
+            await SaveSubscriptions(snowfall, now);
+            
             return Ok();
         }
 
@@ -49,6 +51,15 @@ namespace PowderBot.Controllers
             {
                 await new MultiTextMessage(subGroup.Select(s => s.Uri), "Check this out:")
                     .SendMessage(subGroup.Key, _messanger);
+            }
+        }
+
+        private async Task SaveSubscriptions(IEnumerable<SubscriptionModel> subs, DateTimeOffset now)
+        {
+            foreach (var sub in subs)
+            {
+                sub.LastMessageSent = now;
+                await _subscriptionRepo.Save(sub);
             }
         }
     }

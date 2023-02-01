@@ -35,10 +35,5 @@ namespace Data
         {
             await _repo.InsertOrReplace(subscription);
         }
-
-        public IEnumerable<Task> CreateSaveTasks(IEnumerable<Models.SubscriptionModel> subscriptions)
-        {
-            return subscriptions.Select(s => Save(s));
-        }
     }
 }

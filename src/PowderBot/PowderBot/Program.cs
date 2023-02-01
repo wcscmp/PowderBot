@@ -44,7 +44,7 @@ void RegisterServices(IServiceCollection services, IConfiguration configuration)
     services.Configure<TelegramConfiguration>(configuration.GetSection("Telegram"));
 
     // Solution services registration
-    services.AddSingleton<HttpClient, HttpClient>();
+    services.AddScoped<HttpClient, HttpClient>();
     services.AddScoped<IGenericRepository<UserModel>, GenericRepository<UserModel>>();
     services.AddScoped<IGenericRepository<SubscriptionModel>, GenericRepository<SubscriptionModel>>();
     services.AddScoped<UserRepository, UserRepository>();
