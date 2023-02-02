@@ -18,7 +18,7 @@ namespace Data.Models
 
         public bool CanBeNotified(DateTimeOffset now)
         {
-            const int notifyAfter = 9;
+            const int notifyAfter = 10;
             const int notifyBefore = 22;
             var userTime = now.AddHours(Gmt).Hour;
             return notifyAfter <= userTime && userTime < notifyBefore;
