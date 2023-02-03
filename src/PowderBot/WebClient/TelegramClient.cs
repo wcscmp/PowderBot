@@ -13,10 +13,10 @@ namespace WebClient
         private readonly ILogger<TelegramClient> _logger;
         private readonly TelegramConfiguration _telegramConfiguration;
 
-        public TelegramClient(ILogger<TelegramClient> logger, IOptions<TelegramConfiguration> config)
+        public TelegramClient(ILogger<TelegramClient> logger, IOptions<TelegramConfiguration> telegramConfiguration)
         {
             _logger = logger;
-            _telegramConfiguration = config.Value;
+            _telegramConfiguration = telegramConfiguration.Value;
         }
 
         public Task<double> QueryUserTimezone(string userId)
