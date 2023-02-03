@@ -32,6 +32,11 @@ namespace PowderBot.Controllers
         {
             var emptyResult = new OkObjectResult(string.Empty);
 
+            if (Request.Headers.TryGetValue("X-Telegram-Bot-Api-Secret-Token", out var tokenHeader))
+            {
+                _logger.LogCritical($"Token header: {tokenHeader.FirstOrDefault()}");
+            }
+
             try
             {
                 if (update?.Message?.From == null ||
