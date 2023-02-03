@@ -2,6 +2,7 @@
 using Data;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Telegram.Bot.Types;
 using WebClient;
 
@@ -11,13 +12,17 @@ namespace PowderBot.Controllers
     public class TelegramWebhookController : Controller
     {
         private readonly ILogger<TelegramWebhookController> _logger;
+        private readonly TelegramConfiguration _telegramConfiguration;
 
-        public TelegramWebhookController(ILogger<TelegramWebhookController> logger,
+        public TelegramWebhookController(
+            ILogger<TelegramWebhookController> logger,
+            IOptions<TelegramConfiguration> telegramConfiguration,
             IMessanger messanger,
             CommandFactory commandFactory,
             UserRepository userRepo)
         {
             _logger = logger;
+            _telegramConfiguration = telegramConfiguration.Value;
             _messanger = messanger;
             _commandFactory = commandFactory;
             _userRepo = userRepo;
@@ -31,6 +36,10 @@ namespace PowderBot.Controllers
         public async Task<IActionResult> Post([FromBody] Update update)
         {
             var emptyResult = new OkObjectResult(string.Empty);
+
+            if (!Request.Headers.TryGetValue("X-Telegram-Bot-Api-Secret-Token", out var tokenHeader) ||
+                tokenHeader.FirstOrDefault() != _telegramConfiguration.SecretToken)
+                return emptyResult;
 
             try
             {
