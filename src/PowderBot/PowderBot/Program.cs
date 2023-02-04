@@ -2,6 +2,7 @@ using BusinessLogic;
 using Data.Models;
 using Data;
 using WebClient;
+using PowderBot;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +43,7 @@ void RegisterServices(IServiceCollection services, IConfiguration configuration)
     // Register configurations
     services.Configure<StorageConfiguration>(configuration.GetSection("Storage"));
     services.Configure<TelegramConfiguration>(configuration.GetSection("Telegram"));
+    services.Configure<SchedulerConfiguration>(configuration.GetSection("Scheduler"));
 
     // Solution services registration
     services.AddScoped<HttpClient, HttpClient>();

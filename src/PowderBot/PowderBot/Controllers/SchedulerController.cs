@@ -2,6 +2,7 @@ using BusinessLogic;
 using Data;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using WebClient;
 
 namespace PowderBot.Controllers
@@ -9,11 +10,16 @@ namespace PowderBot.Controllers
     [Route("Scheduler")]
     public class SchedulerController : Controller
     {
-        public SchedulerController(IMessanger messanger,
-                                   SnowfallChecker snowfallChecker,
-                                   UserRepository userRepo,
-                                   SubscriptionRepository subscriptionRepo)
+        private readonly SchedulerConfiguration _schedulerConfiguration;
+
+        public SchedulerController(
+            IOptions<SchedulerConfiguration> schedulerConfiguration,
+            IMessanger messanger,
+            SnowfallChecker snowfallChecker,
+            UserRepository userRepo,
+            SubscriptionRepository subscriptionRepo)
         {
+            _schedulerConfiguration = schedulerConfiguration.Value;
             _messanger = messanger;
             _snowfallChecker = snowfallChecker;
             _userRepo = userRepo;
@@ -28,6 +34,10 @@ namespace PowderBot.Controllers
         [HttpPost]
         public async Task<IActionResult> Post()
         {
+            if (!Request.Headers.TryGetValue("X-Scheduler-Secret-Token", out var tokenHeader) ||
+                tokenHeader.FirstOrDefault() != _schedulerConfiguration.SecretToken)
+                return new OkObjectResult(string.Empty);
+
             var now = DateTimeOffset.UtcNow;
             var subscriptions = await _subscriptionRepo.GetAll();
             var users = await _userRepo.GetUsersWhoCanBeNotified(now);
