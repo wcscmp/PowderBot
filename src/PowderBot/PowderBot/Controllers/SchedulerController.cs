@@ -11,32 +11,44 @@ namespace PowderBot.Controllers
     public class SchedulerController : Controller
     {
         private readonly SchedulerConfiguration _schedulerConfiguration;
+        private readonly IMessanger _messanger;
+        private readonly SnowfallChecker _snowfallChecker;
+        private readonly UserRepository _userRepo;
+        private readonly SubscriptionRepository _subscriptionRepo;
+
+        private readonly ILogger<SchedulerController> _logger;
 
         public SchedulerController(
             IOptions<SchedulerConfiguration> schedulerConfiguration,
             IMessanger messanger,
             SnowfallChecker snowfallChecker,
             UserRepository userRepo,
-            SubscriptionRepository subscriptionRepo)
+            SubscriptionRepository subscriptionRepo,
+            ILogger<SchedulerController> logger)
         {
             _schedulerConfiguration = schedulerConfiguration.Value;
             _messanger = messanger;
             _snowfallChecker = snowfallChecker;
             _userRepo = userRepo;
             _subscriptionRepo = subscriptionRepo;
-        }
 
-        private readonly IMessanger _messanger;
-        private readonly SnowfallChecker _snowfallChecker;
-        private readonly UserRepository _userRepo;
-        private readonly SubscriptionRepository _subscriptionRepo;
+            _logger = logger;
+        }
 
         [HttpPost]
         public async Task<IActionResult> Post()
         {
+            _logger.LogCritical($"SecretToken: {_schedulerConfiguration.SecretToken}");
+
             if (!Request.Headers.TryGetValue("X-Scheduler-Secret-Token", out var tokenHeader) ||
                 tokenHeader.FirstOrDefault() != _schedulerConfiguration.SecretToken)
-                return new OkObjectResult(string.Empty);
+            {
+                _logger.LogCritical($"Empty TokenHeader: {tokenHeader}");
+            }
+            else
+            {
+                _logger.LogCritical($"TokenHeader: {tokenHeader}");
+            }
 
             var now = DateTimeOffset.UtcNow;
             var subscriptions = await _subscriptionRepo.GetAll();
