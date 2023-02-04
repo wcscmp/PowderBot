@@ -42,8 +42,6 @@ namespace PowderBot.Controllers
 
             try
             {
-                _logger.LogCritical("Scheduler handling start");
-
                 var now = DateTimeOffset.UtcNow;
                 var subscriptions = await _subscriptionRepo.GetAll();
                 var users = await _userRepo.GetUsersWhoCanBeNotified(now);
@@ -57,8 +55,6 @@ namespace PowderBot.Controllers
 
                 await Notify(snowfall);
                 await SaveSubscriptions(snowfall, now);
-
-                _logger.LogCritical("Scheduler handling finish");
             }
             catch (Exception e)
             {
