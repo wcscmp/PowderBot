@@ -10,60 +10,63 @@ namespace PowderBot.Controllers
     [Route("Scheduler")]
     public class SchedulerController : Controller
     {
+        private readonly ILogger<SchedulerController> _logger;
         private readonly SchedulerConfiguration _schedulerConfiguration;
         private readonly IMessanger _messanger;
         private readonly SnowfallChecker _snowfallChecker;
         private readonly UserRepository _userRepo;
         private readonly SubscriptionRepository _subscriptionRepo;
 
-        private readonly ILogger<SchedulerController> _logger;
-
         public SchedulerController(
+            ILogger<SchedulerController> logger,
             IOptions<SchedulerConfiguration> schedulerConfiguration,
             IMessanger messanger,
             SnowfallChecker snowfallChecker,
             UserRepository userRepo,
-            SubscriptionRepository subscriptionRepo,
-            ILogger<SchedulerController> logger)
+            SubscriptionRepository subscriptionRepo)
         {
+            _logger = logger;
             _schedulerConfiguration = schedulerConfiguration.Value;
             _messanger = messanger;
             _snowfallChecker = snowfallChecker;
             _userRepo = userRepo;
             _subscriptionRepo = subscriptionRepo;
-
-            _logger = logger;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post()
         {
-            _logger.LogCritical($"SecretToken: {_schedulerConfiguration.SecretToken}");
-
             if (!Request.Headers.TryGetValue("X-Scheduler-Secret-Token", out var tokenHeader) ||
                 tokenHeader.FirstOrDefault() != _schedulerConfiguration.SecretToken)
+                return Ok();
+
+            try
             {
-                _logger.LogCritical($"Empty TokenHeader: {tokenHeader}");
+                _logger.LogCritical("Scheduler handling start");
+
+                var now = DateTimeOffset.UtcNow;
+                var subscriptions = await _subscriptionRepo.GetAll();
+                var users = await _userRepo.GetUsersWhoCanBeNotified(now);
+
+                var subscriptionsForUsers = subscriptions
+                    .Join(users, s => s.ChatId, u => u.Id, (s, u) => (u, s))
+                    .Where(joined => !joined.Item2.UpdatedToday(joined.Item1, now))
+                    .Select(joined => joined.Item2);
+
+                var snowfall = await _snowfallChecker.Check(subscriptionsForUsers);
+
+                await Notify(snowfall);
+                await SaveSubscriptions(snowfall, now);
+
+                _logger.LogCritical("Scheduler handling finish");
             }
-            else
+            catch (Exception e)
             {
-                _logger.LogCritical($"TokenHeader: {tokenHeader}");
+                var message = $"Problems with handling Scheduler. Message: {e.Message}";
+
+                _logger.LogError(message, e);
             }
 
-            var now = DateTimeOffset.UtcNow;
-            var subscriptions = await _subscriptionRepo.GetAll();
-            var users = await _userRepo.GetUsersWhoCanBeNotified(now);
-
-            var subscriptionsForUsers = subscriptions
-                .Join(users, s => s.ChatId, u => u.Id, (s, u) => (u, s))
-                .Where(joined => !joined.Item2.UpdatedToday(joined.Item1, now))
-                .Select(joined => joined.Item2);
-
-            var snowfall = await _snowfallChecker.Check(subscriptionsForUsers);
-
-            await Notify(snowfall);
-            await SaveSubscriptions(snowfall, now);
-            
             return Ok();
         }
 
