@@ -35,18 +35,16 @@ namespace PowderBot.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] Update update)
         {
-            var emptyResult = new OkObjectResult(string.Empty);
-
             if (!Request.Headers.TryGetValue("X-Telegram-Bot-Api-Secret-Token", out var tokenHeader) ||
                 tokenHeader.FirstOrDefault() != _telegramConfiguration.SecretToken)
-                return emptyResult;
+                return Ok();
 
             try
             {
                 if (update?.Message?.From == null ||
                     update?.Message?.Chat == null ||
                     string.IsNullOrWhiteSpace(update?.Message?.Text))
-                    return emptyResult;
+                    return Ok();
 
                 var userId = update.Message.From.Id.ToString();
                 var chatId = update.Message.Chat.Id.ToString();
@@ -67,8 +65,6 @@ namespace PowderBot.Controllers
                 updatedUser.Gmt = await _messanger.QueryUserTimezone(updatedUser.Id);
 
                 await _userRepo.Save(updatedUser);
-
-                return Ok();
             }
             catch (Exception e)
             {
@@ -77,7 +73,7 @@ namespace PowderBot.Controllers
                 _logger.LogError(message, e);
             }
 
-            return emptyResult;
+            return Ok();
         }
     }
 }
